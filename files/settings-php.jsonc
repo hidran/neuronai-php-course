@@ -1,0 +1,8 @@
+// The line added to the user settings.json (Command Palette: "Preferences: Open User Settings (JSON)").
+// Use the full path of the Herd Lite PHP installed by php.new on your system; "you" is your user name.
+// macOS:
+"php.validate.executablePath": "/Users/you/.config/herd-lite/bin/php"
+// Ubuntu:
+"php.validate.executablePath": "/home/you/.config/herd-lite/bin/php"
+// Windows (backslashes doubled inside a JSON string):
+"php.validate.executablePath": "C:\\Users\\you\\.config\\herd-lite\\bin\\php.exe"
