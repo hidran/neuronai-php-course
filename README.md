@@ -1,8 +1,8 @@
 # Agentic AI in PHP with NeuronAI
 
-Source code and exercises for the English course. Choose a lesson below to browse its source or download its ZIP. Each branch preserves that lesson's files.
+Source code and exercises for the English course. Choose a lesson to browse its source or download its ZIP. Each branch preserves that lesson's files.
 
-Use PHP 8.5 or later. Setup commands and file locations are described in each lesson README. Add your own provider keys locally; credentials are never included.
+Use PHP 8.5 or later. Setup commands and file locations are described in each lesson README. Supply your own provider keys locally; credentials are never included.
 
 | Lesson | Source | Download |
 | --- | --- | --- |
@@ -49,6 +49,6 @@ Use PHP 8.5 or later. Setup commands and file locations are described in each le
 | Why structured output exists: parsing free text breaks | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-01-why-structured-output) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-01-why-structured-output.zip) |
 | Defining the output class | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-02-output-class) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-02-output-class.zip) |
 | Requesting structured output | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-03-requesting-structured-output) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-03-requesting-structured-output.zip) |
+| Nested objects and typed arrays | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-04-nested-objects) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-04-nested-objects.zip) |
 
-The course is being produced section by section. This index lists available lessons.
-
+The course is being produced continuously. This index lists available lesson sources.
