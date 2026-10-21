@@ -1,0 +1,10 @@
+    public function visible(bool $visible): ToolInterface
+    {
+        $this->visible = $visible;
+        return $this;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->visible;
+    }

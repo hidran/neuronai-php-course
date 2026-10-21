@@ -1,0 +1,40 @@
+    /**
+     * The provider, the conversation, the instructions, the context of a turn
+     * and the tools, built fresh for every execution segment. Toolkits are flattened into their
+     * tools and their guidelines join the instructions.
+     */
+    protected function resources(): AgentResources
+    {
+        [$instructions, $tools] = $this->resolveTools();
+
+        // Copies: a run may edit its context without touching the configured blocks
+        $context = array_map(
+            static fn (ContentBlockInterface $block): ContentBlockInterface => clone $block,
+            $this->context ?? $this->context(),
+        );
+
+        return new AgentResources($this->getProvider(), $this->getChatHistory(), $instructions, new ToolRegistry($tools), $context);
+    }
+
+    /**
+     * @return array{SystemMessage, array<ToolInterface|ProviderToolInterface>}
+     */
+    protected function resolveTools(): array
+    {
+        $tools = [];
+        $guidelines = [];
+
+        foreach ($this->getTools() as $tool) {
+            if ($tool instanceof ToolkitInterface) {
+                $innerTools = array_filter($tool->tools(), fn (ToolInterface $tool): bool => $tool->isVisible());
+                $tools = array_merge($tools, $innerTools);
+
+                $kitGuidelines = $tool->guidelines();
+                if ($innerTools !== [] && $kitGuidelines !== null && $kitGuidelines !== '') {
+                    $names = array_map(fn (ToolInterface $tool): string => $tool->getName(), $innerTools);
+                    $guidelines[] = '# '.implode(', ', $names).PHP_EOL.$kitGuidelines;
+                }
+            } elseif ($tool->isVisible()) {
+                $tools[] = $tool;
+            }
+        }
