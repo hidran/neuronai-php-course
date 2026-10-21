@@ -1,0 +1,57 @@
+        try {
+            $this->checkToolRuns($call, $state, $tools);
+            $result = $this->memoize($memoKey, function () use ($call, $tools): string|ToolOutput {
+                $tool = $this->resolveTool($call, $tools);
+
+                $tool->execute();
+                return $tool->getResult();
+            });
+
+            $call->setResult($result);
+        } catch (Throwable $e) {
+            $this->handleError($e, $call);
+        } finally {
+            $this->emit(new ToolCalled($call));
+        }
+    }
+
+    /**
+     * Accounting is independent of execution-result memos: a replay counts the
+     * batch again from the state its step started with, so a call whose result
+     * is already recorded gets its count back without consuming another slot.
+     * The live tool supplies the key and the limit on every pass, and the count
+     * is taken before the limit is enforced: a refused call consumed its attempt.
+     *
+     * @throws ToolRunsExceededException
+     * @throws ToolException
+     */
+    protected function checkToolRuns(ToolCall $call, AgentState $state, ToolRegistry $tools): void
+    {
+        $tool = $this->resolveTool($call, $tools);
+        $key = $tool->getRunKey();
+        $limit = $tool->getMaxRuns() ?? $this->maxRuns;
+
+        $state->incrementToolRun($key);
+        if ($state->getToolRuns($key) > $limit) {
+            throw new ToolRunsExceededException("Tool {$call->getName()} has been executed too many times - {$limit}");
+        }
+    }
+
+    /**
+     * Escaped exceptions are bugs and propagate by default -- a conversational
+     * failure is a RETURNED ToolOutput::error(), never a throw. A handler
+     * returning a string or ToolOutput settles it as the call's result;
+     * returning null declines and the exception propagates.
+     *
+     * @throws Throwable When no handler is set, or the handler declines
+     */
+    protected function handleError(Throwable $e, ToolCall $call): void
+    {
+        $result = $this->errorHandler === null ? null : ($this->errorHandler)($e, $call);
+
+        if ($result === null) {
+            throw $e;
+        }
+
+        $call->setResult($result);
+    }
