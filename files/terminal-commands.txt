@@ -1,0 +1,4 @@
+php -v
+php -m | grep -E "curl|mbstring|pdo_mysql|pcntl|posix"
+which php
+composer -V
