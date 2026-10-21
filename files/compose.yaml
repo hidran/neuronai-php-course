@@ -1,0 +1,69 @@
+# Optional Docker setup for the plain PHP examples.
+# You do not need it if PHP 8.5+ and Composer are installed on your machine.
+#
+#   docker compose build                                   # once
+#   docker compose run --rm php composer install           # once per project
+#   docker compose run --rm php php examples/00-check-environment.php
+#   docker compose up -d mariadb                           # only for the database lessons
+#   docker compose --profile redis up -d redis             # only for Redis persistence
+#   docker compose --profile ollama up -d ollama           # only if you do not run Ollama natively
+#
+# The same .env works with and without Docker: the values below override only the host names,
+# because inside a container "localhost" is the container itself.
+
+services:
+  php:
+    build: ./docker/php
+    image: neuron-course/php:8.5
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - composer-cache:/tmp/composer-cache
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      COMPOSER_CACHE_DIR: /tmp/composer-cache
+      # Ollama running natively on the host (the fast option on macOS, which has no GPU inside Docker).
+      # With the ollama service below use: DOCKER_OLLAMA_URL=http://ollama:11434/api
+      OLLAMA_URL: ${DOCKER_OLLAMA_URL:-http://host.docker.internal:11434/api}
+      RAG_DSN: mysql:host=mariadb;port=3306;dbname=${DB_DATABASE:-neuron}
+      DB_HOST: mariadb
+      REDIS_HOST: redis
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  mariadb:
+    image: mariadb:11.8
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-secret}
+      MARIADB_DATABASE: ${DB_DATABASE:-neuron}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:8-alpine
+    profiles: ["redis"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+
+  # CPU only on macOS (Docker cannot use the Apple GPU): prefer the native Ollama app there.
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["ollama"]
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+
+volumes:
+  composer-cache:
+  mariadb-data:
+  ollama-models:
