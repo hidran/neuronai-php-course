@@ -1,0 +1,38 @@
+    /**
+     * Global max runs for all tools.
+     */
+    protected int $toolMaxRuns = 10;
+
+    /**
+     * @var callable|null fn(Throwable $e, ToolCall $call): string|ToolOutput|null
+     */
+    protected $toolErrorHandler;
+
+    /**
+     * Handle exceptions that escape tool execution: a returned string or
+     * ToolOutput becomes the tool result visible to the LLM and the loop
+     * continues; returning null declines — the exception propagates.
+     *
+     * @param callable|null $handler fn(Throwable $e, ToolCall $call): string|ToolOutput|null
+     */
+    public function toolErrorHandler(?callable $handler): static
+    {
+        $this->toolErrorHandler = $handler;
+        return $this;
+    }
+
+    /**
+     * Override to provide a default error handler in your agent.
+     *
+     * @return callable|null fn(Throwable $e, ToolCall $call): string|ToolOutput|null
+     */
+    protected function resolveToolErrorHandler(): ?callable
+    {
+        return null;
+    }
+
+    public function toolMaxRuns(int $num): static
+    {
+        $this->toolMaxRuns = $num;
+        return $this;
+    }

@@ -1,0 +1,11 @@
+    protected function checkToolRuns(ToolCall $call, AgentState $state, ToolRegistry $tools): void
+    {
+        $tool = $this->resolveTool($call, $tools);
+        $key = $tool->getRunKey();
+        $limit = $tool->getMaxRuns() ?? $this->maxRuns;
+
+        $state->incrementToolRun($key);
+        if ($state->getToolRuns($key) > $limit) {
+            throw new ToolRunsExceededException("Tool {$call->getName()} has been executed too many times - {$limit}");
+        }
+    }
