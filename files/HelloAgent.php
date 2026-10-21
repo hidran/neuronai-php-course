@@ -1,0 +1,21 @@
+<?php
+declare(strict_types=1);
+namespace App;
+use NeuronAI\Agent\Agent;
+use NeuronAI\Providers\AIProviderInterface;
+use NeuronAI\Providers\Anthropic\Anthropic;
+class HelloAgent extends Agent
+{
+    protected function provider(): AIProviderInterface
+    {
+        return new Anthropic(
+            key: $_ENV['ANTHROPIC_KEY'],
+            model: $_ENV['ANTHROPIC_MODEL'] ?? 'claude-sonnet-5-5',
+        );
+    }
+    protected function instructions(): string
+    {
+        return 'You are a friendly PHP teacher. '
+            . 'Answer in at most two short sentences.';
+    }
+}
