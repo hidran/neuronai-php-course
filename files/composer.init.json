@@ -1,0 +1,8 @@
+{
+    "name": "neuron-course/plain-php",
+    "description": "Plain PHP examples of the course Agentic AI in PHP with NeuronAI",
+    "type": "project",
+    "require": {
+        "php": ">=8.5"
+    }
+}
