@@ -1,7 +1,7 @@
-# Agentic AI in PHP with NeuronAI: lesson source
+# Non-determinism: the same prompt five times, and what changes
 
-Student-facing source code for each English lesson. Each `lesson/<slug>` branch contains the code and exercise files for one lesson.
+Student-facing source for lesson `02-05-non-determinism` in **Agentic AI in PHP with NeuronAI**.
 
-Browse lesson branches: https://github.com/hidran/neuronai-php-course/branches
+`files/` contains the lesson code and configuration. `exercise.en.md` is included when available.
 
-Production recordings, private credentials, instructor materials, scripts, and generated media are not included.
+The Udemy lecture includes a downloadable ZIP of this branch.
