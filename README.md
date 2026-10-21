@@ -1,7 +1,7 @@
-# Agentic AI in PHP with NeuronAI: lesson source
+# Tool descriptions are prompt engineering: an A/B experiment
 
-Student-facing source code for each English lesson. Each `lesson/<slug>` branch contains the code and exercise files for one lesson.
+Student-facing source for lesson `05-03-tool-descriptions-ab` in **Agentic AI in PHP with NeuronAI**.
 
-Browse lesson branches: https://github.com/hidran/neuronai-php-course/branches
+`files/` contains the lesson code and configuration. `exercise.en.md` is included when available.
 
-Production recordings, private credentials, instructor materials, scripts, and generated media are not included.
+The Udemy lecture includes a downloadable ZIP of this branch.
