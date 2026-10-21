@@ -47,6 +47,8 @@ Use PHP 8.5 or later. Setup commands and file locations are described in each le
 | Lab: weather and calculator agent | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-12-lab-weather-calculator) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-12-lab-weather-calculator.zip) |
 | A read-only database analyst | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-13-lab-database-analyst) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-13-lab-database-analyst.zip) |
 | Why structured output exists: parsing free text breaks | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-01-why-structured-output) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-01-why-structured-output.zip) |
+| Defining the output class | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-02-output-class) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-02-output-class.zip) |
+| Requesting structured output | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-03-requesting-structured-output) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-03-requesting-structured-output.zip) |
 
 The course is being produced section by section. This index lists available lessons.
 
