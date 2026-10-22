@@ -1,0 +1,13 @@
+{
+  "image": {
+    "triangle_color": "green",
+    "triangle_label": "CEDAR-47",
+    "circle_label": "ORBIT-29"
+  },
+  "pdf": {
+    "dispatch_code": "PINE-842",
+    "crates": 17,
+    "dock": "West-4",
+    "review_word": "saffron"
+  }
+}
