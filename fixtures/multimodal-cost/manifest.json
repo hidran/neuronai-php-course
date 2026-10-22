@@ -1,0 +1,37 @@
+{
+  "question": "Read the attached inventory card. Return only JSON with keys heading, small_label, quantity. The small_label is the audit seal. For quantity, use the Rivet row. Use null if a value is unreadable.",
+  "expected": {
+    "heading": "HARBOR-731",
+    "small_label": "COVE-592",
+    "quantity": 18
+  },
+  "exercise_question": "Read the attached inventory card. Return only JSON with keys heading, small_label, quantity. The small_label is the audit seal. For quantity, use the Bracket row. Use null if a value is unreadable.",
+  "exercise_expected": {
+    "heading": "HARBOR-731",
+    "small_label": "COVE-592",
+    "quantity": 42
+  },
+  "variants": [
+    {
+      "name": "full",
+      "file": "full.png",
+      "width": 1600,
+      "height": 1000,
+      "sha256": "b3e73aee4b233fe1871dc81d6948b0d12e1aa886bc20b3795dc7daa7075ac67a"
+    },
+    {
+      "name": "medium",
+      "file": "medium.png",
+      "width": 800,
+      "height": 500,
+      "sha256": "c3fe7b08ed31b0ab941b9ca7eeb06a744b610df924251b2d8c05d3731035f1ff"
+    },
+    {
+      "name": "tiny",
+      "file": "tiny.png",
+      "width": 240,
+      "height": 150,
+      "sha256": "3af5390ce09d28bc491cee276c755cb20d0e03e6fb1c419e40cc92f172e24170"
+    }
+  ]
+}
