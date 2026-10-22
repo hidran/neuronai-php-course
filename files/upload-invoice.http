@@ -1,0 +1,33 @@
+### Upload the teaching invoice with the studio environment
+# @name uploadTeachingInvoice
+# @no-cookie-jar
+POST https://api.openai.com/v1/files
+Authorization: Bearer {{apiKey}}
+Content-Type: multipart/form-data; boundary=lessonBoundary
+
+--lessonBoundary
+Content-Disposition: form-data; name="purpose"
+
+user_data
+--lessonBoundary
+Content-Disposition: form-data; name="expires_after[anchor]"
+
+created_at
+--lessonBoundary
+Content-Disposition: form-data; name="expires_after[seconds]"
+
+86400
+--lessonBoundary
+Content-Disposition: form-data; name="file"; filename="invoice.pdf"
+Content-Type: application/pdf
+
+< ../fixtures/sources/invoice.pdf
+--lessonBoundary--
+
+> {%
+client.test("Teaching invoice uploaded", function () {
+    client.assert(response.status === 200, "Upload failed");
+    client.assert(response.body.id.startsWith("file-"), "No file ID");
+});
+%}
+>>! ../storage/source-upload.json
