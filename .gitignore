@@ -1,0 +1,6 @@
+/vendor/
+/.env
+/.idea/
+http-client.private.env.json
+http-client.env.json
+storage/*.json
