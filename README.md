@@ -52,3 +52,11 @@ Use PHP 8.5 or later. Setup commands and file locations are described in each le
 | Nested objects and typed arrays | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-04-nested-objects) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-04-nested-objects.zip) |
 
 The course is being produced continuously. This index lists available lesson sources.
+| Validation and retry | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-05-validation-retry) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-05-validation-retry.zip) |
+| Structured output vs tool calling | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-06-structured-output-vs-tools) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-06-structured-output-vs-tools.zip) |
+| Lab: extracting orders from emails | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-07-lab-order-extraction) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-07-lab-order-extraction.zip) |
+| Streaming and its chunks | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/07-01-stream-chunks) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/07-01-stream-chunks.zip) |
+| Streaming from the command line | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/07-02-streaming-cli) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/07-02-streaming-cli.zip) |
+| Streaming with tools | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/07-03-streaming-tools) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/07-03-streaming-tools.zip) |
+| Images and documents as content blocks | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/08-01-media-content-blocks) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/08-01-media-content-blocks.zip) |
+| Source types and file identifiers | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/08-02-source-types-file-id) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/08-02-source-types-file-id.zip) |
