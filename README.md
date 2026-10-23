@@ -65,3 +65,5 @@ The course is being produced continuously. This index lists available lesson sou
 | Connect a local tool server with MCP | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/09-01-mcp-local-server) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/09-01-mcp-local-server.zip) |
 | Connecting to an MCP server over HTTP | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/09-02-mcp-http-servers) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/09-02-mcp-http-servers.zip) |
 | Filtering and trusting MCP tools | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/09-03-mcp-filtering-security) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/09-03-mcp-filtering-security.zip) |
+
+| Observe agent runs with Inspector | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/10-01-observability-inspector) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/10-01-observability-inspector.zip) |
