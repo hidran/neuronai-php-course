@@ -1,67 +1,20 @@
-# Agentic AI in PHP with NeuronAI
+# Observe agent runs with Inspector
 
-Source code and exercises for the English course. Choose a lesson to browse its source or download its ZIP. Each branch preserves that lesson's files.
+Source and verified exercise for Agentic AI in PHP with NeuronAI.
 
-Use PHP 8.5 or later. Setup commands and file locations are described in each lesson README. Supply your own provider keys locally; credentials are never included.
+Use PHP 8.5 or later and run `composer install`. Copy `.env.example` to `.env` and privately configure your own Anthropic key and model. Keep credentials out of Git.
 
-| Lesson | Source | Download |
-| --- | --- | --- |
-| Welcome: what we build, who it is for, how the course works | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/01-01-welcome) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/01-01-welcome.zip) |
-| PhpStorm, PHP 8.5 and Composer on macOS, Windows and Ubuntu with php.new | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/01-02-php-phpstorm-setup) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/01-02-php-phpstorm-setup.zip) |
-| Optional: VS Code (or any PHP editor) instead of PhpStorm | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/01-02b-vscode-setup) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/01-02b-vscode-setup.zip) |
-| Optional: the same setup with Docker (PHP 8.5, Composer, MariaDB) | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/01-03-docker-setup) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/01-03-docker-setup.zip) |
-| The project: composer init, PSR-4, NeuronAI, phpdotenv and the environment check | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/01-04-the-project) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/01-04-the-project.zip) |
-| Keys and environment: .env, .env.example, what never gets committed | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/01-05-keys-and-environment) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/01-05-keys-and-environment.zip) |
-| Hello, NeuronAI: our first agent answers | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/01-06-hello-neuronai) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/01-06-hello-neuronai.zip) |
-| Optional: free local models with Ollama, and why they can be slow | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/01-07-ollama-local-models) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/01-07-ollama-local-models.zip) |
-| The autonomy ladder: our hello world is rung 1, who decides what happens next | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/02-01-the-autonomy-ladder) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/02-01-the-autonomy-ladder.zip) |
-| Our first tool: watching the agent loop happen | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/02-02-our-first-tool) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/02-02-our-first-tool.zip) |
-| Anatomy of a model call: the messages, the tool schema and the usage of our run | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/02-03-anatomy-of-a-model-call) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/02-03-anatomy-of-a-model-call.zip) |
-| Tokens, cost and latency: measuring our own runs | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/02-04-tokens-cost-latency) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/02-04-tokens-cost-latency.zip) |
-| Non-determinism: the same prompt five times, and what changes | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/02-05-non-determinism) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/02-05-non-determinism.zip) |
-| Choosing the right rung: one feature as a single call and as an agent, compared | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/02-06-choosing-the-right-rung) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/02-06-choosing-the-right-rung.zip) |
-| The four pillars and everything is an interface: reading the source in PhpStorm | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/03-01-four-pillars-interfaces) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/03-01-four-pillars-interfaces.zip) |
-| Agent and RAG are workflows: the nodes behind chat() | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/03-02-agents-are-workflows) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/03-02-agents-are-workflows.zip) |
-| The framework CLI and the agent class: extend or compose | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/03-03-cli-and-agent-class) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/03-03-cli-and-agent-class.zip) |
-| SystemPrompt: background, steps, output | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/03-04-system-prompt) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/03-04-system-prompt.zip) |
-| Deferred instructions with context() | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/03-05-deferred-context) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/03-05-deferred-context.zip) |
-| Provider swap: the same agent on Anthropic, OpenAI, Gemini and Ollama | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/03-06-provider-swap) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/03-06-provider-swap.zip) |
-| Lab: an assistant CLI driven by environment | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/03-07-lab-assistant-cli) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/03-07-lab-assistant-cli.zip) |
-| The message model | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/04-01-message-model) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/04-01-message-model.zip) |
-| The model has no memory: two calls | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/04-02-no-memory) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/04-02-no-memory.zip) |
-| Message stores and the thread ID | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/04-03-message-stores) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/04-03-message-stores.zip) |
-| Context window and trimming | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/04-04-context-trimming) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/04-04-context-trimming.zip) |
-| Session memory vs long-term memory | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/04-05-session-vs-long-term) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/04-05-session-vs-long-term.zip) |
-| Lab: a persistent CLI chat with /reset | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/04-06-lab-persistent-chat) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/04-06-lab-persistent-chat.zip) |
-| What the model sees: name, description and JSON schema of our tool | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-01-what-the-model-sees) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-01-what-the-model-sees.zip) |
-| Tools as classes, with dependencies | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-02-tools-as-classes) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-02-tools-as-classes.zip) |
-| Tool descriptions are prompt engineering: an A/B experiment | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-03-tool-descriptions-ab) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-03-tool-descriptions-ab.zip) |
-| Property types: scalars, arrays and objects | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-04-property-types) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-04-property-types.zip) |
-| Structured tool input with #[SchemaProperty] | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-05-schema-property) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-05-schema-property.zip) |
-| Toolkits | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-06-toolkits) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-06-toolkits.zip) |
-| Toolkit filters, add() and Firecrawl | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-07-toolkit-filters) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-07-toolkit-filters.zip) |
-| Max runs: guarding the loop | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-08-max-runs) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-08-max-runs.zip) |
-| Visibility: conditional tool availability | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-09-tool-visibility) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-09-tool-visibility.zip) |
-| Tool error handling: returning the error to the model | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-10-tool-errors) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-10-tool-errors.zip) |
-| Provider tools: native web search, when it pays off | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-11-provider-tools) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-11-provider-tools.zip) |
-| Lab: weather and calculator agent | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-12-lab-weather-calculator) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-12-lab-weather-calculator.zip) |
-| A read-only database analyst | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/05-13-lab-database-analyst) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/05-13-lab-database-analyst.zip) |
-| Why structured output exists: parsing free text breaks | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-01-why-structured-output) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-01-why-structured-output.zip) |
-| Defining the output class | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-02-output-class) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-02-output-class.zip) |
-| Requesting structured output | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-03-requesting-structured-output) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-03-requesting-structured-output.zip) |
-| Nested objects and typed arrays | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-04-nested-objects) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-04-nested-objects.zip) |
+The weather tool returns fixed teaching temperatures, not live weather. Local event delivery and backend ingestion are separate checks.
 
-The course is being produced continuously. This index lists available lesson sources.
-| Validation and retry | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-05-validation-retry) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-05-validation-retry.zip) |
-| Structured output vs tool calling | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-06-structured-output-vs-tools) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-06-structured-output-vs-tools.zip) |
-| Lab: extracting orders from emails | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/06-07-lab-order-extraction) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/06-07-lab-order-extraction.zip) |
-| Streaming and its chunks | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/07-01-stream-chunks) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/07-01-stream-chunks.zip) |
-| Streaming from the command line | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/07-02-streaming-cli) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/07-02-streaming-cli.zip) |
-| Streaming with tools | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/07-03-streaming-tools) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/07-03-streaming-tools.zip) |
-| Images and documents as content blocks | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/08-01-media-content-blocks) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/08-01-media-content-blocks.zip) |
-| Source types and file identifiers | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/08-02-source-types-file-id) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/08-02-source-types-file-id.zip) |
-| Measuring multimodal cost | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/08-03-multimodal-cost-design) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/08-03-multimodal-cost-design.zip) |
-| Building an invoice extractor | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/08-04-invoice-extractor) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/08-04-invoice-extractor.zip) |
-| Connect a local tool server with MCP | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/09-01-mcp-local-server) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/09-01-mcp-local-server.zip) |
-| Connecting to an MCP server over HTTP | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/09-02-mcp-http-servers) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/09-02-mcp-http-servers.zip) |
-| Filtering and trusting MCP tools | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/09-03-mcp-filtering-security) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/09-03-mcp-filtering-security.zip) |
+Run the finished examples:
+
+- `php examples/49-observability.php local`: broad event listener.
+- `php examples/49-observability.php tools`: actual completed tool names and arguments.
+- `php examples/49-observability.php log`: name-only application event log.
+- `php examples/49-observability.php inspector`: real Inspector subscriber.
+- `php examples/49-observability.php factory`: monitored factory-returned instance.
+- `php examples/exercise-observability.php`: distinct instance-isolation exercise.
+
+The two backend modes additionally require your own `INSPECTOR_INGESTION_KEY`; `INSPECTOR_API` is accepted as an alternative when the unused `INSPECTOR_INGESTION_KEY` entry is removed. Sign in to your own Inspector application, then match the actual thread label and hash saved in `storage/inspector-latest.json` with the corresponding trace. An answer alone does not prove delivery. SDK compatibility is checked against `Inspector\Neuron\V4\InspectorSubscriber`.
+
+The `src/` and `examples/` folders form the finished project. `files/` and `stages/` preserve teaching variants. Follow `exercise.en.md` for acceptance criteria, including the separate backend check. Instructor browser automation and private configuration are excluded.
