@@ -1,36 +1,58 @@
 <?php
 declare(strict_types=1);
-namespace App\Dto;
+namespace App\Invoices;
 use NeuronAI\StructuredOutput\SchemaProperty;
 use NeuronAI\StructuredOutput\Validation\Rules\ArrayOf;
 use NeuronAI\StructuredOutput\Validation\Rules\NotBlank;
 use NeuronAI\StructuredOutput\Validation\Rules\Regex;
-class Invoice
+final readonly class Invoice
 {
-    #[SchemaProperty(description: 'Number exactly as printed.')]
-    #[NotBlank]
-    public string $number;
-    #[SchemaProperty(description: 'Supplier legal name.')]
-    #[NotBlank]
-    public string $supplier_name;
-    #[SchemaProperty(description: 'Issue date, YYYY-MM-DD.')]
-    #[Regex('/^\d{4}-\d{2}-\d{2}$/')]
-    public string $issue_date;
-    #[SchemaProperty(description: 'Uppercase currency code.')]
-    #[Regex('/^[A-Z]{3}$/')]
-    public string $currency;
-    #[SchemaProperty(description: 'Subtotal excluding tax.')]
-    public float $subtotal;
-    #[SchemaProperty(
-        description: 'Tax; zero only if explicitly tax exempt.',
-    )]
-    public float $vat_amount;
-    #[SchemaProperty(description: 'Grand total including tax.')]
-    public float $total;
-    #[SchemaProperty(
-        description: 'All rows in order, including later pages.',
-        anyOf: [InvoiceLine::class],
-    )]
-    #[ArrayOf(InvoiceLine::class)]
-    public array $lines;
+    public function __construct(
+        #[SchemaProperty(
+            description: 'Invoice number exactly as printed.',
+            required: true,
+        )]
+        #[NotBlank]
+        public string $number,
+        #[SchemaProperty(
+            description: 'Supplier legal name.',
+            required: true,
+        )]
+        #[NotBlank]
+        public string $supplierName,
+        #[SchemaProperty(
+            description: 'Issue date as YYYY-MM-DD.',
+            required: true,
+        )]
+        #[Regex('/^\d{4}-\d{2}-\d{2}$/')]
+        public string $issueDate,
+        #[SchemaProperty(
+            description: 'Currency code printed on the invoice.',
+            required: true,
+        )]
+        public Currency $currency,
+        #[SchemaProperty(
+            description: 'Printed subtotal in cents, excluding tax.',
+            required: true,
+        )]
+        public int $subtotalCents,
+        #[SchemaProperty(
+            description: 'Printed tax in cents, zero only if exempt.',
+            required: true,
+        )]
+        public int $vatCents,
+        #[SchemaProperty(
+            description: 'Printed grand total in cents.',
+            required: true,
+        )]
+        public int $totalCents,
+        #[SchemaProperty(
+            description: 'All rows in order, including later pages.',
+            required: true,
+            anyOf: [InvoiceLine::class],
+        )]
+        #[ArrayOf(InvoiceLine::class)]
+        public array $lines,
+    ) {
+    }
 }

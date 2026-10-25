@@ -3,24 +3,24 @@
     "normal": {
       "invoice": {
         "number": "0007-A",
-        "supplier_name": "North Pine Works",
-        "issue_date": "2026-10-12",
+        "supplierName": "North Pine Works",
+        "issueDate": "2026-10-12",
         "currency": "EUR",
-        "subtotal": 38.0,
-        "vat_amount": 7.6,
-        "total": 45.6,
+        "subtotalCents": 3800,
+        "vatCents": 760,
+        "totalCents": 4560,
         "lines": [
           {
             "description": "Cable clips",
-            "quantity": 3.0,
-            "unit_price": 4.5,
-            "line_total": 13.5
+            "quantity": 3,
+            "unitPriceCents": 450,
+            "lineTotalCents": 1350
           },
           {
             "description": "Mounting plate",
-            "quantity": 2.0,
-            "unit_price": 12.25,
-            "line_total": 24.5
+            "quantity": 2,
+            "unitPriceCents": 1225,
+            "lineTotalCents": 2450
           }
         ]
       },
@@ -29,24 +29,24 @@
     "alternate": {
       "invoice": {
         "number": "INV/0042-B",
-        "supplier_name": "Amber Dock Studio",
-        "issue_date": "2026-10-14",
+        "supplierName": "Amber Dock Studio",
+        "issueDate": "2026-10-14",
         "currency": "GBP",
-        "subtotal": 45.0,
-        "vat_amount": 9.0,
-        "total": 54.0,
+        "subtotalCents": 4500,
+        "vatCents": 900,
+        "totalCents": 5400,
         "lines": [
           {
             "description": "Panel bracket",
-            "quantity": 4.0,
-            "unit_price": 8.25,
-            "line_total": 33.0
+            "quantity": 4,
+            "unitPriceCents": 825,
+            "lineTotalCents": 3300
           },
           {
             "description": "Packing sleeve",
-            "quantity": 5.0,
-            "unit_price": 2.4,
-            "line_total": 12.0
+            "quantity": 5,
+            "unitPriceCents": 240,
+            "lineTotalCents": 1200
           }
         ]
       },
@@ -55,24 +55,24 @@
     "tax-exempt": {
       "invoice": {
         "number": "TAX-0009",
-        "supplier_name": "Maple Learning Coop",
-        "issue_date": "2026-10-15",
+        "supplierName": "Maple Learning Coop",
+        "issueDate": "2026-10-15",
         "currency": "USD",
-        "subtotal": 45.0,
-        "vat_amount": 0.0,
-        "total": 45.0,
+        "subtotalCents": 4500,
+        "vatCents": 0,
+        "totalCents": 4500,
         "lines": [
           {
             "description": "Workshop handbook",
-            "quantity": 3.0,
-            "unit_price": 10.0,
-            "line_total": 30.0
+            "quantity": 3,
+            "unitPriceCents": 1000,
+            "lineTotalCents": 3000
           },
           {
             "description": "Practice cards",
-            "quantity": 2.0,
-            "unit_price": 7.5,
-            "line_total": 15.0
+            "quantity": 2,
+            "unitPriceCents": 750,
+            "lineTotalCents": 1500
           }
         ]
       },
@@ -81,24 +81,24 @@
     "inconsistent": {
       "invoice": {
         "number": "CHECK-0011",
-        "supplier_name": "Cedar Measure Lab",
-        "issue_date": "2026-10-16",
+        "supplierName": "Cedar Measure Lab",
+        "issueDate": "2026-10-16",
         "currency": "EUR",
-        "subtotal": 45.0,
-        "vat_amount": 9.0,
-        "total": 54.0,
+        "subtotalCents": 4500,
+        "vatCents": 900,
+        "totalCents": 5400,
         "lines": [
           {
             "description": "Gauge block",
-            "quantity": 2.0,
-            "unit_price": 14.0,
-            "line_total": 28.0
+            "quantity": 2,
+            "unitPriceCents": 1400,
+            "lineTotalCents": 2800
           },
           {
             "description": "Caliper case",
-            "quantity": 1.0,
-            "unit_price": 12.0,
-            "line_total": 12.0
+            "quantity": 1,
+            "unitPriceCents": 1200,
+            "lineTotalCents": 1200
           }
         ]
       },
@@ -107,24 +107,24 @@
     "exercise": {
       "invoice": {
         "number": "EX/0073",
-        "supplier_name": "Willow Bench Supply",
-        "issue_date": "2026-10-18",
+        "supplierName": "Willow Bench Supply",
+        "issueDate": "2026-10-18",
         "currency": "EUR",
-        "subtotal": 37.0,
-        "vat_amount": 7.4,
-        "total": 44.4,
+        "subtotalCents": 3700,
+        "vatCents": 740,
+        "totalCents": 4440,
         "lines": [
           {
             "description": "Spacer set",
-            "quantity": 4.0,
-            "unit_price": 3.75,
-            "line_total": 15.0
+            "quantity": 4,
+            "unitPriceCents": 375,
+            "lineTotalCents": 1500
           },
           {
             "description": "Steel guide",
-            "quantity": 2.0,
-            "unit_price": 11.0,
-            "line_total": 22.0
+            "quantity": 2,
+            "unitPriceCents": 1100,
+            "lineTotalCents": 2200
           }
         ]
       },
