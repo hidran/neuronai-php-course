@@ -1,8 +1,0 @@
-# php.new install commands (checked on 2026-10-19 against https://php.new and the installer scripts)
-# macOS (Terminal)
-/bin/bash -c "$(curl -fsSL https://php.new/install/mac)"
-# Ubuntu (terminal; sudo apt install curl first if curl is missing)
-/bin/bash -c "$(curl -fsSL https://php.new/install/linux)"
-# Windows (PowerShell, one line)
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows'))
-# Then quit and reopen the terminal.
