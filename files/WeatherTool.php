@@ -9,7 +9,7 @@ use NeuronAI\Tools\PropertyType;
 use NeuronAI\Tools\Tool;
 use NeuronAI\Tools\ToolOutput;
 use NeuronAI\Tools\ToolProperty;
-class WeatherTool extends Tool
+final class WeatherTool extends Tool
 {
     private const string PLACES =
         'https://geocoding-api.open-meteo.com/v1/search';
@@ -19,28 +19,37 @@ class WeatherTool extends Tool
     protected ?string $description = 'Returns the temperature'
         . ' right now in a city, in degrees Celsius, from live'
         . ' weather data. Use it whenever the user asks about the'
-        . ' current temperature in Italy. One city per'
-        . ' call. Never guess a temperature: always call this tool.';
-    public function __construct(private HttpClientInterface $http)
-    {
+        . ' current temperature somewhere. One city per call.'
+        . ' Never guess a temperature: always call this tool.';
+    public function __construct(
+        private readonly HttpClientInterface $http,
+    ) {
     }
+    #[\Override]
     protected function properties(): array
     {
         return [
             new ToolProperty(
                 name: 'city',
                 type: PropertyType::STRING,
-                description: 'An Italian city name only, like Turin.',
+                description: 'A city name, like Turin.',
                 required: true,
+            ),
+            new ToolProperty(
+                name: 'country',
+                type: PropertyType::STRING,
+                description: 'Two-letter country code, default IT.',
             ),
         ];
     }
-    public function __invoke(string $city): ToolOutput
-    {
+    public function __invoke(
+        string $city,
+        string $country = 'IT',
+    ): ToolOutput {
         try {
             $found = $this->get(self::PLACES, [
                 'name' => $city, 'count' => 1, 'language' => 'en',
-                'countryCode' => 'IT',
+                'countryCode' => strtoupper($country),
             ]);
             $place = $found['results'][0] ?? null;
             if ($place === null) {
