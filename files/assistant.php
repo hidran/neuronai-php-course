@@ -2,52 +2,40 @@
 declare(strict_types=1);
 require __DIR__ . '/vendor/autoload.php';
 use App\Agents\AssistantAgent;
+use App\Config\ProviderFactory;
+use App\Config\Settings;
 use App\PackageVersionTool;
 use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\UserMessage;
+use NeuronAI\Exceptions\NeuronException;
 Dotenv::createImmutable(__DIR__)->safeLoad();
-function env(string $name): ?string
-{
-    $value = $_ENV[$name] ?? $_SERVER[$name] ?? getenv($name);
-    return $value === false || $value === '' ? null : $value;
-}
-function fail(string $message): never
-{
-    fwrite(STDERR, "Configuration error: {$message}" . PHP_EOL);
+try {
+    $settings = Settings::fromEnv($_ENV);
+} catch (RuntimeException $e) {
+    fwrite(STDERR, "Configuration error: {$e->getMessage()}" . PHP_EOL);
     exit(1);
 }
-$keys = [
-    'anthropic' => 'ANTHROPIC_KEY',
-    'openai' => 'OPENAI_KEY',
-    'gemini' => 'GEMINI_KEY',
-    'ollama' => null,
-];
-$provider = env('NEURON_PROVIDER') ?? 'ollama';
-if (!array_key_exists($provider, $keys)) {
-    $known = implode(', ', array_keys($keys));
-    fail("unknown provider {$provider}, use one of: {$known}");
-}
-$key = $keys[$provider];
-if ($key !== null && env($key) === null) {
-    fail("{$key} is not set, and {$provider} needs it");
-}
-$agent = AssistantAgent::make()
-    ->useProvider($provider)
+$agent = AssistantAgent::make(new ProviderFactory($settings)->create())
     ->addTool(new PackageVersionTool())
     ->setThreadId('cli');
-function ask(AssistantAgent $agent, string $question): void
+function ask(AssistantAgent $agent, Settings $settings, string $q): void
 {
-    $state = $agent->chat(new UserMessage($question));
+    try {
+        $state = $agent->chat(new UserMessage($q));
+    } catch (NeuronException $e) {
+        fwrite(STDERR, "Error: {$e->getMessage()}" . PHP_EOL);
+        return;
+    }
     echo $state->getMessage()?->getContent() . PHP_EOL;
-    $engine = $agent->getProvider();
-    echo 'Answered by: ' . $engine::class
-        . ", {$engine->getModel()}" . PHP_EOL;
+    echo "Answered by: {$settings->provider->value}, "
+        . $settings->model . PHP_EOL;
 }
 if (isset($argv[1])) {
-    ask($agent, $argv[1]);
+    ask($agent, $settings, $argv[1]);
     exit(0);
 }
-echo "Chatting on {$provider}. Type exit to quit." . PHP_EOL;
+echo "Chatting on {$settings->provider->value}. Type exit to quit."
+    . PHP_EOL;
 echo 'You: ';
 while (($line = fgets(STDIN)) !== false) {
     $question = trim($line);
@@ -55,7 +43,7 @@ while (($line = fgets(STDIN)) !== false) {
         break;
     }
     if ($question !== '') {
-        ask($agent, $question);
+        ask($agent, $settings, $question);
     }
     echo 'You: ';
 }
