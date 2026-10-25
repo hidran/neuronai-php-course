@@ -2,11 +2,11 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\PersonExtractor;
-use App\Output\Person;
-use Dotenv\Dotenv;
+use App\Config\ProviderFactory;
 use NeuronAI\Chat\Messages\UserMessage;
-Dotenv::createImmutable(dirname(__DIR__))->load();
-$agent = PersonExtractor::make()->setThreadId('person');
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
+$agent = PersonExtractor::make($provider)->setThreadId('person');
 $message = new UserMessage(
     'I am Ada Turner, I am 32, and my favorite food is pizza.'
 );

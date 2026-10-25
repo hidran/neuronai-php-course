@@ -1,3 +1,6 @@
 /vendor/
 /.env
 /.idea/
+/storage/*
+!/storage/.gitkeep
+/http-client.private.env.json
