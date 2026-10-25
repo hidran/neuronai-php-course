@@ -2,10 +2,11 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\StreamingAgent;
-use Dotenv\Dotenv;
+use App\Config\ProviderFactory;
 use NeuronAI\Chat\Messages\Stream\Chunks\TextChunk;
 use NeuronAI\Chat\Messages\UserMessage;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $prompt = $argv[1]
     ?? 'Explain dependency injection for a PHP developer.';
 echo 'You: ' . $prompt . PHP_EOL;
@@ -13,7 +14,7 @@ echo 'Assistant: ';
 flush();
 $start = hrtime(true);
 $first = null;
-$stream = StreamingAgent::make()->setThreadId('cli')
+$stream = StreamingAgent::make($provider)->setThreadId('cli')
     ->stream(new UserMessage($prompt));
 foreach ($stream as $chunk) {
     if (!$chunk instanceof TextChunk || $chunk->content === '') {
