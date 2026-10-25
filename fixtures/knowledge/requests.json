@@ -1,0 +1,13 @@
+[
+    {
+        "question": "Can opened lamp shades be refunded?",
+        "authority": "document",
+        "source": "refund-policy.md"
+    },
+    {
+        "question": "Has order 4471 been refunded?",
+        "authority": "record",
+        "tool": "order_status",
+        "arguments": {"order_id": 4471}
+    }
+]
