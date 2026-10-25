@@ -2,26 +2,27 @@
 declare(strict_types=1);
 namespace App;
 use NeuronAI\Agent\Agent;
+use NeuronAI\Agent\SystemPrompt;
+use NeuronAI\Chat\Messages\SystemMessage;
 use NeuronAI\Providers\AIProviderInterface;
-use NeuronAI\Providers\Anthropic\Anthropic;
-class HelloAgent extends Agent
+final class HelloAgent extends Agent
 {
-    protected function provider(): AIProviderInterface
+    public function __construct(AIProviderInterface $provider)
     {
-        return new Anthropic(
-            key: $_ENV['ANTHROPIC_KEY'],
-            model: $_ENV['ANTHROPIC_MODEL'] ?? 'claude-sonnet-5-5',
-        );
+        parent::__construct();
+        $this->setAiProvider($provider);
     }
-    protected function instructions(): string
+    #[\Override]
+    protected function instructions(): SystemMessage
     {
-        return 'You are a friendly PHP teacher. '
-            . 'Answer in at most two short sentences.';
+        return new SystemMessage((string) new SystemPrompt(
+            background: ['You are a friendly PHP teacher.'],
+            output: ['Answer in at most two short sentences.'],
+        ));
     }
+    #[\Override]
     protected function tools(): array
     {
-        return [
-            new PackageVersionTool(),
-        ];
+        return [new PackageVersionTool()];
     }
 }
