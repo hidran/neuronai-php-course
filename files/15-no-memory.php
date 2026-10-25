@@ -1,16 +1,13 @@
 <?php
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
-use Dotenv\Dotenv;
+use App\Config\ProviderFactory;
 use NeuronAI\Agent\Agent;
 use NeuronAI\Chat\Messages\Message;
+use NeuronAI\Chat\Messages\SystemMessage;
 use NeuronAI\Chat\Messages\UserMessage;
-use NeuronAI\Providers\Anthropic\Anthropic;
-Dotenv::createImmutable(dirname(__DIR__))->load();
-$model = new Anthropic(
-    key: $_ENV['ANTHROPIC_KEY'],
-    model: $_ENV['ANTHROPIC_MODEL'] ?? 'claude-sonnet-5-5',
-);
+$settings = require __DIR__ . '/bootstrap.php';
+$model = new ProviderFactory($settings)->create();
 $model->systemPrompt('Answer in one short sentence.');
 function show(string $label, ?Message $reply): void
 {
@@ -27,7 +24,9 @@ $history = [$hello, $answer, $question];
 show('Call 3, history', $model->chat(...$history)->message());
 $agent = Agent::make()
     ->setAiProvider($model)
-    ->setInstructions('Answer in one short sentence.')
+    ->setInstructions(new SystemMessage(
+        'Answer in one short sentence.'
+    ))
     ->setThreadId('memory');
 $turns = [
     'Hi, my name is Valerio.',
