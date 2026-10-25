@@ -1,7 +1,9 @@
-# Optional: free local models with Ollama, and why they can be slow
+# Optional: free local models with Ollama: install on macOS, Windows and Ubuntu, pull a model, run our agent on it, and why it can be slow
 
-Student-facing source for lesson `01-07-ollama-local-models` in **Agentic AI in PHP with NeuronAI**.
+Source and verified exercise for Agentic AI in PHP with NeuronAI.
 
-`files/` contains the lesson code and configuration. `exercise.en.md` is included when available.
+Use PHP 8.5 or later. Run `composer install`, copy `.env.example` to `.env`, and supply your own provider credentials privately for model calls. Keep `.env` out of Git.
 
-The Udemy lecture includes a downloadable ZIP of this branch.
+`files/` holds the lesson files as they appear in the video. The same files are placed where the project expects them: classes under `src/`, scripts under `examples/`, and fixtures, servers, tests and requests in their own folders.
+
+Credentials are never included: every key comes from your own `.env`.
