@@ -2,18 +2,19 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\AssistantAgent;
+use App\Config\ProviderFactory;
 use App\Tools\FindPackagesTool;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\ToolCallMessage;
 use NeuronAI\Chat\Messages\UserMessage;
-Dotenv::createImmutable(dirname(__DIR__))->load();
-$tool = FindPackagesTool::make();
+$settings = require __DIR__ . '/bootstrap.php';
+$tool = new FindPackagesTool();
 if ($argc < 2) {
     $schema = $tool->getInputSchema();
     echo json_encode($schema, JSON_PRETTY_PRINT) . PHP_EOL;
     exit;
 }
-$state = AssistantAgent::make()
+$provider = new ProviderFactory($settings)->create();
+$state = AssistantAgent::make($provider)
     ->addTool($tool)
     ->setThreadId('schema-property')
     ->chat(new UserMessage($argv[1]));

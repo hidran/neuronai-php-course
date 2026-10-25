@@ -1,25 +1,17 @@
 <?php
-
 declare(strict_types=1);
-
 namespace App\Tools;
-
 use App\Dto\PackageFilter;
 use Composer\InstalledVersions;
 use NeuronAI\Tools\ObjectProperty;
 use NeuronAI\Tools\Tool;
 use NeuronAI\Tools\ToolOutput;
-
-class FindPackagesTool extends Tool
+final class FindPackagesTool extends Tool
 {
     protected string $name = 'find_packages';
-
     protected ?string $description = 'Lists the installed Composer'
         . ' packages of one vendor.';
-
-    /**
-     * Properties are the input arguments of the __invoke method.
-     */
+    #[\Override]
     protected function properties(): array
     {
         return [
@@ -31,10 +23,6 @@ class FindPackagesTool extends Tool
             ),
         ];
     }
-
-    /**
-     * Implementing the tool logic
-     */
     public function __invoke(PackageFilter $filter): ToolOutput
     {
         $found = [];
