@@ -2,18 +2,19 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\AssistantAgent;
+use App\Config\ProviderFactory;
 use App\PackageVersionTool;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Exceptions\ToolRunsExceededException;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $limit = (int) ($argv[1] ?? 10);
 echo "Limit: {$limit}" . PHP_EOL;
 $question = 'Which versions do we have of vlucas/phpdotenv,'
     . ' phpoption/phpoption, psr/event-dispatcher'
     . ' and neuron-core/neuron-ai?';
-$agent = AssistantAgent::make()
-    ->addTool(PackageVersionTool::make())
+$agent = AssistantAgent::make($provider)
+    ->addTool(new PackageVersionTool())
     ->toolMaxRuns($limit)
     ->setThreadId('max-runs');
 try {
