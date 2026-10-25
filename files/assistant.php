@@ -2,86 +2,58 @@
 declare(strict_types=1);
 require __DIR__ . '/vendor/autoload.php';
 use App\Agents\AssistantAgent;
+use App\Config\ProviderFactory;
+use App\Config\Settings;
+use App\Config\StorageSettings;
 use App\PackageVersionTool;
+use App\Support\Database;
+use App\Support\MessageStoreFactory;
 use Dotenv\Dotenv;
-use NeuronAI\Chat\History\FileMessageStore;
-use NeuronAI\Chat\History\SQLMessageStore;
 use NeuronAI\Chat\Messages\UserMessage;
+use NeuronAI\Exceptions\NeuronException;
 Dotenv::createImmutable(__DIR__)->safeLoad();
-function env(string $name): ?string
-{
-    $value = $_ENV[$name] ?? $_SERVER[$name] ?? getenv($name);
-    return $value === false || $value === '' ? null : $value;
-}
 function fail(string $message): never
 {
     fwrite(STDERR, "Configuration error: {$message}" . PHP_EOL);
     exit(1);
 }
-function sqlStore(string $storage): SQLMessageStore
-{
-    is_dir($storage) || mkdir($storage, recursive: true);
-    $pdo = new PDO("sqlite:{$storage}/chat.sqlite");
-    $pdo->exec('CREATE TABLE IF NOT EXISTS chat_messages ('
-        . 'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-        . ' thread_id VARCHAR(255) NOT NULL,'
-        . ' message_id VARCHAR(64) NOT NULL,'
-        . ' role VARCHAR(32) NOT NULL, content TEXT, meta TEXT,'
-        . ' archived_at TIMESTAMP,'
-        . ' created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,'
-        . ' updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,'
-        . ' UNIQUE (thread_id, message_id))');
-    return new SQLMessageStore(pdo: $pdo);
+try {
+    $settings = Settings::fromEnv($_ENV);
+    $storage = StorageSettings::fromEnv($_ENV, __DIR__);
+    $database = new Database(
+        $storage->dsn, $storage->user, $storage->password,
+    );
+    $store = new MessageStoreFactory($storage, $database)->create();
+} catch (RuntimeException $e) {
+    fail($e->getMessage());
 }
-$keys = [
-    'anthropic' => 'ANTHROPIC_KEY',
-    'openai' => 'OPENAI_KEY',
-    'gemini' => 'GEMINI_KEY',
-    'ollama' => null,
-];
-$provider = env('NEURON_PROVIDER') ?? 'ollama';
-if (!array_key_exists($provider, $keys)) {
-    $known = implode(', ', array_keys($keys));
-    fail("unknown provider {$provider}, use one of: {$known}");
-}
-$key = $keys[$provider];
-if ($key !== null && env($key) === null) {
-    fail("{$key} is not set, and {$provider} needs it");
-}
-$stores = ['file', 'sqlite'];
-$storeName = env('ASSISTANT_STORE') ?? 'file';
-if (!in_array($storeName, $stores, true)) {
-    $known = implode(', ', $stores);
-    fail("unknown store {$storeName}, use one of: {$known}");
-}
-$thread = env('ASSISTANT_THREAD') ?? 'cli';
+$thread = $argv[2] ?? 'cli';
 if (preg_match('/^[a-z0-9-]{1,64}$/', $thread) !== 1) {
     fail("thread {$thread}: use lowercase letters, digits, dashes");
 }
-$storage = __DIR__ . '/storage/assistant';
-$store = match ($storeName) {
-    'file' => new FileMessageStore(directory: $storage, ext: '.json'),
-    'sqlite' => sqlStore($storage),
-};
-$agent = AssistantAgent::make()
-    ->useProvider($provider)
+$agent = AssistantAgent::make(new ProviderFactory($settings)->create())
     ->addTool(new PackageVersionTool())
     ->setMessageStore($store)
     ->setThreadId($thread);
-function ask(AssistantAgent $agent, string $question): void
+function ask(AssistantAgent $agent, Settings $settings, string $q): void
 {
-    $state = $agent->chat(new UserMessage($question));
+    try {
+        $state = $agent->chat(new UserMessage($q));
+    } catch (NeuronException $e) {
+        fwrite(STDERR, "Model error: {$e->getMessage()}" . PHP_EOL);
+        return;
+    }
     echo $state->getMessage()?->getContent() . PHP_EOL;
-    $engine = $agent->getProvider();
-    echo 'Answered by: ' . $engine::class
-        . ", {$engine->getModel()}" . PHP_EOL;
+    echo "Answered by: {$settings->provider->value}, "
+        . $settings->model . PHP_EOL;
 }
-if (isset($argv[1])) {
-    ask($agent, $argv[1]);
+if (isset($argv[1]) && $argv[1] !== '-') {
+    ask($agent, $settings, $argv[1]);
     exit(0);
 }
-echo "Chatting on {$provider}. Type exit to quit." . PHP_EOL;
-echo "Thread {$thread}, {$storeName} store."
+echo "Chatting on {$settings->provider->value}. Type exit to quit."
+    . PHP_EOL;
+echo "Thread {$thread}, {$storage->chatStore} store."
     . ' Commands: /history, /reset.' . PHP_EOL;
 echo 'You: ';
 while (($line = fgets(STDIN)) !== false) {
@@ -98,12 +70,7 @@ while (($line = fgets(STDIN)) !== false) {
         echo "History: {$stored} stored, {$sent} sent to the model."
             . PHP_EOL;
     } elseif ($question !== '') {
-        try {
-            ask($agent, $question);
-        } catch (Throwable $e) {
-            fwrite(STDERR, 'Model error: ' . $e->getMessage()
-                . PHP_EOL);
-        }
+        ask($agent, $settings, $question);
     }
     echo 'You: ';
 }
