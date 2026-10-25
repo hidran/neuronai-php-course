@@ -1,0 +1,184 @@
+{
+  "cases": {
+    "normal": {
+      "invoice": {
+        "number": "0007-A",
+        "supplierName": "North Pine Works",
+        "issueDate": "2026-10-12",
+        "currency": "EUR",
+        "subtotalCents": 3800,
+        "vatCents": 760,
+        "totalCents": 4560,
+        "lines": [
+          {
+            "description": "Cable clips",
+            "quantity": 3,
+            "unitPriceCents": 450,
+            "lineTotalCents": 1350
+          },
+          {
+            "description": "Mounting plate",
+            "quantity": 2,
+            "unitPriceCents": 1225,
+            "lineTotalCents": 2450
+          }
+        ]
+      },
+      "status": "accepted"
+    },
+    "alternate": {
+      "invoice": {
+        "number": "INV/0042-B",
+        "supplierName": "Amber Dock Studio",
+        "issueDate": "2026-10-14",
+        "currency": "GBP",
+        "subtotalCents": 4500,
+        "vatCents": 900,
+        "totalCents": 5400,
+        "lines": [
+          {
+            "description": "Panel bracket",
+            "quantity": 4,
+            "unitPriceCents": 825,
+            "lineTotalCents": 3300
+          },
+          {
+            "description": "Packing sleeve",
+            "quantity": 5,
+            "unitPriceCents": 240,
+            "lineTotalCents": 1200
+          }
+        ]
+      },
+      "status": "accepted"
+    },
+    "tax-exempt": {
+      "invoice": {
+        "number": "TAX-0009",
+        "supplierName": "Maple Learning Coop",
+        "issueDate": "2026-10-15",
+        "currency": "USD",
+        "subtotalCents": 4500,
+        "vatCents": 0,
+        "totalCents": 4500,
+        "lines": [
+          {
+            "description": "Workshop handbook",
+            "quantity": 3,
+            "unitPriceCents": 1000,
+            "lineTotalCents": 3000
+          },
+          {
+            "description": "Practice cards",
+            "quantity": 2,
+            "unitPriceCents": 750,
+            "lineTotalCents": 1500
+          }
+        ]
+      },
+      "status": "accepted"
+    },
+    "inconsistent": {
+      "invoice": {
+        "number": "CHECK-0011",
+        "supplierName": "Cedar Measure Lab",
+        "issueDate": "2026-10-16",
+        "currency": "EUR",
+        "subtotalCents": 4500,
+        "vatCents": 900,
+        "totalCents": 5400,
+        "lines": [
+          {
+            "description": "Gauge block",
+            "quantity": 2,
+            "unitPriceCents": 1400,
+            "lineTotalCents": 2800
+          },
+          {
+            "description": "Caliper case",
+            "quantity": 1,
+            "unitPriceCents": 1200,
+            "lineTotalCents": 1200
+          }
+        ]
+      },
+      "status": "review_required"
+    },
+    "exercise": {
+      "invoice": {
+        "number": "EX/0073",
+        "supplierName": "Willow Bench Supply",
+        "issueDate": "2026-10-18",
+        "currency": "EUR",
+        "subtotalCents": 3700,
+        "vatCents": 740,
+        "totalCents": 4440,
+        "lines": [
+          {
+            "description": "Spacer set",
+            "quantity": 4,
+            "unitPriceCents": 375,
+            "lineTotalCents": 1500
+          },
+          {
+            "description": "Steel guide",
+            "quantity": 2,
+            "unitPriceCents": 1100,
+            "lineTotalCents": 2200
+          }
+        ]
+      },
+      "status": "accepted"
+    }
+  },
+  "files": {
+    "normal.pdf": {
+      "case": "normal",
+      "sha256": "65a6b47725d843210a8366f5138a20d7e7c36a809adc333618b15cbef6ea6c07"
+    },
+    "normal.png": {
+      "case": "normal",
+      "sha256": "1e2ded58d88b1cb3e1618d66c94f2adf4102e4ac1116bc76ee6ac0c981c84f93"
+    },
+    "alternate.pdf": {
+      "case": "alternate",
+      "sha256": "0ff82ece976045878c217f979f389cc762d8321541a8790a32aba41090d43b7b"
+    },
+    "alternate.png": {
+      "case": "alternate",
+      "sha256": "a4f2ea7162e0c1467c587856d5a7db6c8c5615c88817e84e934a4fa782d35800"
+    },
+    "tax-exempt.pdf": {
+      "case": "tax-exempt",
+      "sha256": "72ed8620481a2994af9d12abc5a60ac4d4a3889c91083b074f24a86897f31c17"
+    },
+    "tax-exempt.png": {
+      "case": "tax-exempt",
+      "sha256": "d6316cd741944f66328a7725ace7c7a2cfb56d340754216ab26b9639ee2aeacc"
+    },
+    "inconsistent.pdf": {
+      "case": "inconsistent",
+      "sha256": "c3856a021e93482d1f6c30f7f5751fede2e583c9f98b4b705dda59583bd8c118"
+    },
+    "inconsistent.png": {
+      "case": "inconsistent",
+      "sha256": "b5b13d8a53f636e25c4192995573d0cdfbf35730ac103d804f917889955e296d"
+    },
+    "exercise.pdf": {
+      "case": "exercise",
+      "sha256": "a10cfcddefc3cccc56d314b55d62361db27db7e74b2669a7ab2aaee633f8cfce"
+    },
+    "exercise.png": {
+      "case": "exercise",
+      "sha256": "d8f4d9a5fd581d085badf7273256920f1e11a282424ded9907a303c031052af7"
+    },
+    "invoice-full.png": {
+      "case": "normal",
+      "sha256": "2029ce65477729aec1394b7d4e8889bdb25db4bf49d05537fa75b34b171af87f"
+    },
+    "invoice-small.png": {
+      "case": "normal",
+      "sha256": "d9681046516f9fe7631d64b4b0992a3cab29b726ed938b109a59cf3b087d8790"
+    }
+  }
+}
