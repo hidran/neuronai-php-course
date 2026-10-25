@@ -2,30 +2,27 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\AssistantAgent;
+use App\Config\ProviderFactory;
 use App\Tools\CountMessagesTool;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\ToolResultMessage;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Tools\ToolOutput;
-Dotenv::createImmutable(dirname(__DIR__))->load();
-$pdo = new PDO('sqlite::memory:');
-$safe = new class ($pdo) extends CountMessagesTool {
-    public function __invoke(string $thread): ToolOutput
-    {
-        try {
-            return parent::__invoke($thread);
-        } catch (PDOException) {
-            return ToolOutput::error('The chat database is not'
-                . ' set up yet. Tell the user, and do not retry.');
-        }
-    }
-};
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $mode = $argv[1] ?? 'plain';
 echo "Mode: {$mode}" . PHP_EOL;
-$tool = $mode === 'safe' ? $safe : CountMessagesTool::make($pdo);
-$agent = AssistantAgent::make()
-    ->addTool($tool)
+$empty = new PDO('sqlite::memory:');
+$agent = AssistantAgent::make($provider)
+    ->addTool(new CountMessagesTool($empty))
     ->setThreadId('tool-errors');
+if ($mode === 'safe') {
+    $agent->toolErrorHandler(
+        fn (Throwable $e) => $e instanceof PDOException
+            ? ToolOutput::error('The chat database is not set up'
+                . ' yet. Tell the user, and do not retry.')
+            : null,
+    );
+}
 try {
     $question = 'How many messages are stored on thread bob?';
     $state = $agent->chat(new UserMessage($question));
