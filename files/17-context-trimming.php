@@ -1,14 +1,15 @@
 <?php
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
+use App\Config\ProviderFactory;
 use App\HelloAgent;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\History\InMemoryMessageStore;
 use NeuronAI\Chat\Messages\UserMessage;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $window = 700;
 $store = new InMemoryMessageStore();
-$agent = HelloAgent::make()
+$agent = HelloAgent::make($provider)
     ->setMessageStore($store)
     ->setThreadId('alice')
     ->setContextWindow($window);
@@ -28,5 +29,6 @@ foreach ($questions as $number => $question) {
     echo 'Turn ' . ($number + 1) . ': kept ' . count($kept)
         . " of {$stored} messages, {$tokens} of {$window} tokens"
         . PHP_EOL;
-    echo 'Oldest kept: ' . $kept[0]->getContent() . PHP_EOL;
+    $oldest = array_first($kept)?->getContent() ?? '(none)';
+    echo "Oldest kept: {$oldest}" . PHP_EOL;
 }
