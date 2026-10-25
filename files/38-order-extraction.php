@@ -2,33 +2,36 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\OrderExtractor;
-use App\OrderReview;
+use App\Config\ProviderFactory;
+use App\Orders\Catalog;
+use App\Orders\OrderReview;
 use App\Output\Order;
-use Dotenv\Dotenv;
 use NeuronAI\Agent\Observability\Validated;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Exceptions\AgentException;
 use NeuronAI\StructuredOutput\Deserializer\DeserializerException;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $fixtures = dirname(__DIR__) . '/fixtures/orders';
-$catalog = json_decode(
-    file_get_contents($fixtures . '/catalog.json'),
-    true, flags: JSON_THROW_ON_ERROR,
-);
+$review = new OrderReview(Catalog::fromJsonFile(
+    $fixtures . '/catalog.json'
+));
 $cases = array_slice($argv, 1) ?: [
     'complete', 'incomplete', 'wrong-total', 'malformed',
 ];
 foreach ($cases as $case) {
     echo "Case: {$case}" . PHP_EOL;
-    $agent = OrderExtractor::make()->setThreadId($case);
+    $agent = OrderExtractor::make($provider)->setThreadId($case);
     $agent->subscribe(Validated::class, function (Validated $event) {
-        echo 'Validation violations: '
-            . count($event->violations) . PHP_EOL;
+        foreach ($event->violations as $violation) {
+            echo 'Violation: ' . $violation . PHP_EOL;
+        }
     });
     try {
-        $email = file_get_contents("{$fixtures}/{$case}.txt");
+        $email = file_get_contents("{$fixtures}/{$case}.txt")
+            ?: throw new RuntimeException("Missing email {$case}.");
         $order = $agent->structured(
-            new UserMessage($email), Order::class, maxRetries: 1,
+            new UserMessage($email), Order::class,
         );
         echo 'Lines: ' . count($order->lines) . PHP_EOL;
         foreach ($order->lines as $line) {
@@ -38,11 +41,13 @@ foreach ($cases as $case) {
         }
         echo 'Address: ' . ($order->deliveryAddress?->street
             ?? 'not stated') . PHP_EOL;
-        $issues = OrderReview::issues($order, $catalog);
+        $issues = $review->issues($order);
         echo $issues === [] ? 'Review checks passed.' . PHP_EOL
             : implode(PHP_EOL, $issues) . PHP_EOL;
-    } catch (AgentException | DeserializerException $error) {
-        echo 'Extraction rejected.' . PHP_EOL;
+    } catch (DeserializerException $error) {
+        echo 'Shape rejected: ' . $error->getMessage() . PHP_EOL;
+    } catch (AgentException $error) {
+        echo 'Rules rejected after the retry.' . PHP_EOL;
     }
     echo "Case finished: {$case}" . PHP_EOL;
 }

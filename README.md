@@ -1,14 +1,14 @@
-# Lab: extracting orders from emails
+# Lab 5: extracting orders from free text emails, part 1
 
-Source and verified exercise for **Agentic AI in PHP with NeuronAI**.
+Source and verified exercise for Agentic AI in PHP with NeuronAI.
 
-Use PHP 8.5 or later. Run `composer install`. Copy `.env.example` to `.env` and configure your own provider credentials for live calls. Keep private credentials out of Git.
+Use PHP 8.5 or later. Run `composer install`, copy `.env.example` to `.env`, and supply your own provider credentials privately for model calls. Keep `.env` out of Git.
 
-The project layout contains the finished example. The `files/` and `stages/` folders preserve variants for comparison.
+`files/` holds the lesson files as they appear in the video. The same files are placed where the project expects them: classes under `src/`, scripts under `examples/`, and fixtures, servers, tests and requests in their own folders.
 
 Runnable examples:
 
 - `php examples/38-order-extraction.php`
 - `php examples/exercise-order-extraction.php`
 
-Follow `exercise.en.md` for the exercise, expected checks and worked solution.
+Credentials are never included: every key comes from your own `.env`.

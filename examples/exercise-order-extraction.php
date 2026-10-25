@@ -2,11 +2,12 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\OrderExtractor;
-use App\OrderReview;
+use App\Config\ProviderFactory;
+use App\Orders\Catalog;
+use App\Orders\OrderReview;
 use App\Output\Address;
 use App\Output\Order;
 use App\Output\OrderLine;
-use Dotenv\Dotenv;
 use NeuronAI\Agent\Observability\Validated;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Exceptions\AgentException;
@@ -39,33 +40,26 @@ function facts(Order $order): array
 function candidate(array $source): Order
 {
     [$name, $lines, $total, $address] = $source;
-    $order = new Order();
-    $order->customerName = $name;
-    $order->lines = [];
-    foreach ($lines as [$sku, $quantity, $price]) {
-        $line = new OrderLine();
-        $line->sku = $sku;
-        $line->quantity = $quantity;
-        $line->unitPriceCents = $price;
-        $order->lines[] = $line;
-    }
-    $order->statedTotalCents = $total;
-    if ($address !== null) {
-        $order->deliveryAddress = new Address();
-        [$street, $zip, $city] = $address;
-        $order->deliveryAddress->street = $street;
-        $order->deliveryAddress->zip = $zip;
-        $order->deliveryAddress->city = $city;
-    }
-    return $order;
+    return new Order(
+        lines: array_map(
+            static fn (array $line): OrderLine
+                => new OrderLine(...$line),
+            $lines,
+        ),
+        customerName: $name,
+        statedTotalCents: $total,
+        deliveryAddress: $address === null ? null
+            : new Address(...$address),
+    );
 }
-function review(Order $order, array $catalog): array
+function sorted(array $issues): array
 {
-    $issues = OrderReview::issues($order, $catalog);
     sort($issues);
     return $issues;
 }
-$catalog = ['BW-1120' => 1250, 'WF-0080' => 4500];
+$review = new OrderReview(new Catalog([
+    'BW-1120' => 1250, 'WF-0080' => 4500,
+]));
 // Synthetic emails and an independently written source oracle.
 // Do not supply this oracle or the catalog to the extractor.
 $cases = [
@@ -117,31 +111,30 @@ foreach ($cases as $name => $case) {
         "{$name}: expected valid runtime contract.");
     check(facts($order) === $case['facts'],
         "{$name}: source oracle does not round-trip.");
-    $expected = $case['issues'];
-    sort($expected);
-    check(review($order, $catalog) === $expected,
+    check(sorted($review->issues($order)) === sorted($case['issues']),
         "{$name}: unexpected business review.");
     echo "Local {$name}: contract, source, review verified."
         . PHP_EOL;
 }
-$invalid = candidate($cases['valid']['facts']);
-$invalid->lines[0]->sku = 'blue widget';
-check(Validator::validate($invalid) !== [],
-    'Nested SKU rule was not enforced.');
-$invalid->lines[0]->sku = 'BW-1120';
-$invalid->lines[0]->quantity = 0;
-check(Validator::validate($invalid) !== [],
+$malformed = candidate(['Avery Stone', [['blue widget', 2, 1250]],
+    2500, ['22 Cedar Road', '04001', null]]);
+check(Validator::validate($malformed) === [],
+    'SKU spelling is a review concern, not a retry rule.');
+check($review->issues($malformed) === ['Malformed SKU: blue widget.'],
+    'Malformed SKU was not reported by the review.');
+check(Validator::validate(candidate(['Avery Stone',
+    [['BW-1120', 0, 1250]], 0, null])) !== [],
     'Nested quantity rule was not enforced.');
-$invalid->lines = [];
-check(Validator::validate($invalid) !== [],
+check(Validator::validate(new Order(lines: [])) !== [],
     'An empty order must fail ArrayOf.');
-echo 'Runtime rules: malformed nested line and empty order rejected.'
+echo 'Runtime rules: zero quantity and empty order rejected.'
     . PHP_EOL;
-$changed = candidate($cases['valid']['facts']);
-$changed->lines[0]->quantity = 3;
-check(Validator::validate($changed) === [],
+$changed = $cases['valid']['facts'];
+$changed[1][0][1] = 3;
+$invented = candidate($changed);
+check(Validator::validate($invented) === [],
     'Positive invented quantity should pass property rules.');
-check(facts($changed) !== $cases['valid']['facts'],
+check(facts($invented) !== $cases['valid']['facts'],
     'Source fidelity must detect an invented quantity.');
 echo 'Source fidelity: valid but invented quantity detected.'
     . PHP_EOL;
@@ -151,43 +144,40 @@ if (!in_array('--live', $argv, true)) {
     echo 'Exercise complete.' . PHP_EOL;
     exit(0);
 }
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $failed = false;
 foreach ($cases as $name => $case) {
-    $agent = OrderExtractor::make()->setThreadId(
+    $agent = OrderExtractor::make($provider)->setThreadId(
         'exercise-' . $name . '-' . bin2hex(random_bytes(4)),
     );
     $validations = 0;
     $agent->subscribe(Validated::class,
         function (Validated $event) use (&$validations): void {
             ++$validations;
-            echo 'Validation violations: '
-                . count($event->violations) . PHP_EOL;
+            foreach ($event->violations as $violation) {
+                echo 'Violation: ' . $violation . PHP_EOL;
+            }
         });
     try {
         $order = $agent->structured(
-            new UserMessage($case['email']),
-            Order::class, maxRetries: 1,
+            new UserMessage($case['email']), Order::class,
         );
     } catch (AgentException | DeserializerException $error) {
         echo "Live {$name}: extraction rejected." . PHP_EOL;
         $failed = true;
         continue;
     }
-    check($order instanceof Order,
-        "{$name}: expected an Order.");
     check(Validator::validate($order) === [],
         "{$name}: invalid runtime contract.");
     check(facts($order) === $case['facts'],
         "{$name}: output differs from explicit source facts.");
-    $expected = $case['issues'];
-    sort($expected);
-    check(review($order, $catalog) === $expected,
+    check(sorted($review->issues($order)) === sorted($case['issues']),
         "{$name}: unexpected business review.");
     echo "Live {$name}: contract, source, review verified."
         . PHP_EOL;
     echo "Validation events: {$validations}" . PHP_EOL;
-    foreach ($expected as $issue) {
+    foreach (sorted($case['issues']) as $issue) {
         echo $issue . PHP_EOL;
     }
 }

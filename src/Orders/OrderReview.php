@@ -1,10 +1,15 @@
 <?php
 declare(strict_types=1);
-namespace App;
+namespace App\Orders;
 use App\Output\Order;
-class OrderReview
+final readonly class OrderReview
 {
-    public static function issues(Order $order, array $catalog): array
+    private const string SKU_PATTERN = '/^[A-Z]{2}-[0-9]{4}$/';
+    public function __construct(private Catalog $catalog)
+    {
+    }
+    /** @return list<string> */
+    public function issues(Order $order): array
     {
         $issues = [];
         $expected = 0;
@@ -16,8 +21,13 @@ class OrderReview
             $issues[] = 'Delivery address missing.';
         }
         foreach ($order->lines as $line) {
-            $price = $catalog[$line->sku] ?? null;
-            if (!is_int($price)) {
+            if (preg_match(self::SKU_PATTERN, $line->sku) !== 1) {
+                $issues[] = "Malformed SKU: {$line->sku}.";
+                $known = false;
+                continue;
+            }
+            $price = $this->catalog->priceOf($line->sku);
+            if ($price === null) {
                 $issues[] = "Unknown SKU: {$line->sku}.";
                 $known = false;
                 continue;
