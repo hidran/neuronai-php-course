@@ -1,29 +1,36 @@
 <?php
 declare(strict_types=1);
 namespace App\Agents;
-use App\Mcp\OfficeHoursConnection;
 use App\PackageVersionTool;
 use NeuronAI\Agent\Agent;
+use NeuronAI\Agent\SystemPrompt;
+use NeuronAI\Chat\Messages\SystemMessage;
+use NeuronAI\MCP\McpConnector;
 use NeuronAI\Providers\AIProviderInterface;
-use NeuronAI\Providers\Anthropic\Anthropic;
-class OfficeHoursAgent extends Agent
+final class OfficeHoursAgent extends Agent
 {
-    protected function provider(): AIProviderInterface
-    {
-        return new Anthropic(
-            key: $_ENV['ANTHROPIC_KEY'],
-            model: $_ENV['ANTHROPIC_MODEL'] ?? 'claude-sonnet-5-5',
-        );
+    public function __construct(
+        AIProviderInterface $provider,
+        McpConnector $connector,
+    ) {
+        parent::__construct();
+        $this->setAiProvider($provider);
+        $this->addTool([new PackageVersionTool(),
+            ...$connector->tools()]);
     }
-    protected function instructions(): string
+    #[\Override]
+    protected function instructions(): SystemMessage
     {
-        return 'Use get_office_hours for every office-hours question. '
-            . 'Do not guess. Report exact returned hours and timezone '
-            . 'in a short plain-text answer.';
-    }
-    protected function tools(): array
-    {
-        $connector = OfficeHoursConnection::connector();
-        return [new PackageVersionTool(), ...$connector->tools()];
+        return new SystemMessage((string) new SystemPrompt(
+            background: ['You answer questions about our offices.'],
+            output: [
+                'Report the exact hours and timezone from the tool.',
+                'Answer in one short plain text sentence.',
+            ],
+            toolsUsage: [
+                'Use get_office_hours for every office hours question.',
+                'Never guess hours.',
+            ],
+        ));
     }
 }

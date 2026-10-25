@@ -1,16 +1,14 @@
-# Connect a local tool server with MCP
+# What MCP is, and a first local server connected to our agent, part 1
 
 Source and verified exercise for Agentic AI in PHP with NeuronAI.
 
 Use PHP 8.5 or later. Run `composer install`, copy `.env.example` to `.env`, and supply your own provider credentials privately for model calls. Keep `.env` out of Git.
 
-The finished project is in `src/`, `examples/`, and any fixture folders. `stages/` contains intermediate teaching versions.
+`files/` holds the lesson files as they appear in the video. The same files are placed where the project expects them: classes under `src/`, scripts under `examples/`, and fixtures, servers, tests and requests in their own folders.
 
 Runnable examples:
 
 - `php examples/46-local-mcp.php`
 - `php examples/exercise-local-mcp.php`
 
-Start with `php examples/46-local-mcp.php --discover` for discovery without a provider call. The stdio server is launched automatically.
-
-Follow `exercise.en.md` for the distinct practice task, expected checks, and worked solution.
+Credentials are never included: every key comes from your own `.env`.
