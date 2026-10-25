@@ -1,23 +1,22 @@
 <?php
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
-use Dotenv\Dotenv;
+use App\Config\ProviderFactory;
 use NeuronAI\Agent\Agent;
+use NeuronAI\Chat\Messages\SystemMessage;
 use NeuronAI\Chat\Messages\UserMessage;
-use NeuronAI\Providers\Anthropic\Anthropic;
 function inspectAnswer(string $label, string $answer): void
 {
     try {
-        $data = json_decode($answer, true, flags:
-            JSON_THROW_ON_ERROR);
+        $data = json_decode($answer, associative: true,
+            flags: JSON_THROW_ON_ERROR);
     } catch (JsonException) {
         echo "{$label}: invalid JSON" . PHP_EOL;
         return;
     }
     $valid = is_array($data)
-        && isset($data['name'], $data['total'])
-        && is_string($data['name'])
-        && is_int($data['total']);
+        && is_string($data['name'] ?? null)
+        && is_int($data['total'] ?? null);
     $result = $valid ? 'accepted' : 'contract mismatch';
     echo "{$label}: {$result}" . PHP_EOL;
 }
