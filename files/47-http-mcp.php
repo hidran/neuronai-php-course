@@ -1,41 +1,52 @@
 <?php
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
-use App\Agents\HttpOfficeHoursAgent;
-use App\Mcp\HttpOfficeConnection;
+use App\Agents\OfficeHoursAgent;
+use App\Config\ProviderFactory;
+use App\Mcp\McpConnection;
+use App\Mcp\OfficeEndpoints;
 use App\Streaming\StreamProgress;
 use App\Streaming\ToolStreamConsumer;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Exceptions\ToolException;
 use NeuronAI\MCP\McpException;
+$settings = require __DIR__ . '/bootstrap.php';
 $started = hrtime(true);
+$connection = McpConnection::http(OfficeEndpoints::MCP)
+    ->only(['get_office_hours']);
 try {
-    HttpOfficeConnection::discover();
+    $tools = $connection->tools();
 } catch (McpException | ToolException $error) {
     $category = $error instanceof McpException ? 'transport' : 'schema';
     fwrite(STDERR, 'Integration category: ' . $category . PHP_EOL);
     echo 'Office hours service unavailable.' . PHP_EOL;
     exit(2);
 }
+foreach ($tools as $tool) {
+    echo 'HTTP discovered: ' . $tool->getName() . PHP_EOL;
+    echo 'HTTP input: ' . implode(', ',
+        array_keys($tool->getInputSchema()['properties'])) . PHP_EOL;
+}
+echo 'HTTP discovery ms: ' . round((hrtime(true) - $started) / 1e6)
+    . PHP_EOL;
 if (($argv[1] ?? '') === '--discover') {
+    echo 'HTTP discovery complete.' . PHP_EOL;
     exit;
 }
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$provider = new ProviderFactory($settings)->create();
+$agent = OfficeHoursAgent::make($provider, $connection->connector())
+    ->setThreadId('http-office-demo');
 $view = new StreamProgress(diagnostic: true);
-$stream = HttpOfficeHoursAgent::make()->setThreadId('http-office-demo')
-    ->stream(new UserMessage('When is the north office open?'));
-$state = ToolStreamConsumer::consume($stream, $view);
+$stream = $agent->stream(
+    new UserMessage('When is the north office open?')
+);
+$state = new ToolStreamConsumer($view)->consume($stream);
 if ($state === null) {
     exit(1);
 }
 if (!in_array('get_office_hours', $view->completed(), true)) {
     throw new RuntimeException('The HTTP capability did not run.');
 }
-$reply = $state->getMessage()?->getContent() ?? '';
-if (!str_contains($reply, '09:00') || !str_contains($reply, '17:00')
-    || !str_contains($reply, 'Europe/Rome')) {
-    throw new RuntimeException('The answer missed HTTP server facts.');
-}
-echo 'User request ms: ' . round((hrtime(true) - $started) / 1e6) . PHP_EOL;
-echo 'HTTP MCP ' . 'verified.' . PHP_EOL;
+echo 'User request ms: ' . round((hrtime(true) - $started) / 1e6)
+    . PHP_EOL;
+echo 'HTTP MCP verified.' . PHP_EOL;

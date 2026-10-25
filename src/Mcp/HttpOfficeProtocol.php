@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 namespace App\Mcp;
-class HttpOfficeProtocol
+final class HttpOfficeProtocol
 {
     public static function definition(bool $badSchema = false): array
     {

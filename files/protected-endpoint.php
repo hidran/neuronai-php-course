@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
-// Configuration shape only. This illustrative endpoint is never contacted.
+// Configuration shape only: this endpoint is never contacted.
+use App\Config\McpSettings;
+$mcp = McpSettings::fromEnv($_ENV);
 return [
-    'url' => 'https://mcp.example.invalid/office',
-    'token' => $_ENV['MCP_TOKEN'] ?? '',
+    'url' => $mcp->url,
+    'token' => $mcp->token,
     'headers' => ['X-Client' => 'office-hours-example'],
     'timeout' => 3,
 ];
