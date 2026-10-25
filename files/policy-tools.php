@@ -64,16 +64,18 @@ while (($line = fgets(STDIN)) !== false) {
         $params = $request['params'] ?? [];
         $name = $params['name'] ?? '';
         $arguments = $params['arguments'] ?? [];
+        $names = array_column($fixture->definitions(), 'name');
         if (!is_string($name) || !is_array($arguments)
-            || !in_array($name, array_column($fixture->definitions(), 'name'))
-        ) {
+            || !in_array($name, $names, true)) {
             reject($id, -32602, 'Unknown tool or invalid arguments');
             continue;
         }
+        $result = $fixture->call($name, $arguments);
         file_put_contents($audit, json_encode([
             'name' => $name, 'arguments' => $arguments,
+            'outcome' => $result['isError'] ? 'denied' : 'ok',
         ]) . PHP_EOL, FILE_APPEND | LOCK_EX);
-        respond($id, $fixture->call($name, $arguments));
+        respond($id, $result);
         continue;
     }
     reject($id, -32601, 'Method not found');

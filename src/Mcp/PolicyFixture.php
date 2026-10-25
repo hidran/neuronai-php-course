@@ -1,16 +1,21 @@
 <?php
 declare(strict_types=1);
 namespace App\Mcp;
-class PolicyFixture
+final readonly class PolicyFixture
 {
+    /** @param list<string> $flags */
     public function __construct(private array $flags)
     {
+    }
+    private function flag(string $name): bool
+    {
+        return in_array($name, $this->flags, true);
     }
     public function definitions(): array
     {
         $hours = [
             'name' => 'get_office_hours',
-            'description' => in_array('--changed-description', $this->flags)
+            'description' => $this->flag('--changed-description')
                 ? 'Read the reviewed office schedule; revised wording.'
                 : 'Read office hours for north or south.',
             'inputSchema' => [
@@ -24,7 +29,7 @@ class PolicyFixture
             ],
             'annotations' => ['readOnlyHint' => true],
         ];
-        if (in_array('--broken-read', $this->flags)) {
+        if ($this->flag('--broken-read')) {
             $hours['inputSchema']['anyOf'] = [['type' => 'object']];
         }
         $tools = [$hours, [
@@ -34,10 +39,10 @@ class PolicyFixture
                 'additionalProperties' => false],
             'annotations' => ['readOnlyHint' => true],
         ], $this->maintenance('maintenance_preview')];
-        if (in_array('--expanded', $this->flags)) {
+        if ($this->flag('--expanded')) {
             $tools[] = $this->maintenance('new_maintenance_preview');
         }
-        if (in_array('--unsupported', $this->flags)) {
+        if ($this->flag('--unsupported')) {
             $tool = $this->maintenance('complex_maintenance');
             $tool['inputSchema']['anyOf'] = [['type' => 'object']];
             $tools[] = $tool;
@@ -48,7 +53,7 @@ class PolicyFixture
     {
         return [
             'name' => $name,
-            'description' => 'Teaching maintenance capability; no real action.',
+            'description' => 'Teaching maintenance capability, no action',
             'inputSchema' => ['type' => 'object',
                 'additionalProperties' => false],
             'annotations' => ['readOnlyHint' => false],
@@ -57,9 +62,10 @@ class PolicyFixture
     public function call(string $name, array $arguments): array
     {
         if (str_contains($name, 'maintenance')) {
-            return $this->result('Read-only identity: action denied.', true);
+            return $this->result('Read-only identity: action denied.',
+                true);
         }
-        $scope = in_array('--north-only', $this->flags)
+        $scope = $this->flag('--north-only')
             ? ['north'] : ['north', 'south'];
         if ($name === 'list_locations') {
             return $arguments === []
@@ -68,12 +74,13 @@ class PolicyFixture
         }
         $location = $arguments['location'] ?? null;
         if (!is_string($location)
-            || array_keys($arguments) !== ['location']
-        ) {
-            return $this->result('A location string is required.', true);
+            || array_keys($arguments) !== ['location']) {
+            return $this->result('A location string is required.',
+                true);
         }
         if (!in_array($location, $scope, true)) {
-            return $this->result('Location outside caller scope.', true);
+            return $this->result('Location outside caller scope.',
+                true);
         }
         $hours = ['north' => '09:00-17:00', 'south' => '10:00-18:00'];
         return $this->result([
@@ -81,7 +88,8 @@ class PolicyFixture
             'timezone' => 'Europe/Rome',
         ]);
     }
-    private function result(array|string $value, bool $error = false): array
+    private function result(array|string $value, bool $error = false)
+        : array
     {
         return ['content' => [['type' => 'text',
             'text' => is_string($value) ? $value : json_encode($value),
