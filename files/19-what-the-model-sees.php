@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
-use App\Agents\AssistantAgent;
+use App\Config\ProviderFactory;
+use App\Config\Settings;
 use App\PackageVersionTool;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\ToolCallMessage;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Providers\Anthropic\ToolMapper as AnthropicMapper;
 use NeuronAI\Providers\Gemini\ToolMapper as GeminiMapper;
 use NeuronAI\Providers\OpenAI\ToolMapper as OpenAIMapper;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+require __DIR__ . '/bootstrap.php';
 $tools = [new PackageVersionTool()];
 $mappers = [
     'anthropic' => new AnthropicMapper(),
@@ -24,8 +24,8 @@ foreach ($mappers as $name => $mapper) {
     $json = json_encode($wire, JSON_UNESCAPED_SLASHES);
     echo "{$name} sends " . strlen($json) . ' bytes:' . PHP_EOL;
     echo $json . PHP_EOL;
-    $provider = AssistantAgent::make()->useProvider($name)
-        ->getProvider();
+    $env = ['NEURON_PROVIDER' => $name] + $_ENV;
+    $provider = new ProviderFactory(Settings::fromEnv($env))->create();
     $provider->systemPrompt('Answer in one short sentence.');
     $bare = $provider->chat($question)->message();
     $provider->setTools($tools);
