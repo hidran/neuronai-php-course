@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
+// Runs on the studio Mac against the analyst MariaDB container (not offline).
 require __DIR__ . '/../vendor/autoload.php';
 use NeuronAI\Tools\Toolkits\MySQL\MySQLSchemaTool;
 use NeuronAI\Tools\Toolkits\MySQL\MySQLSelectTool;
 use NeuronAI\Tools\Toolkits\MySQL\MySQLToolkit;
-$pdo = require __DIR__ . '/../database/connect.php';
+require __DIR__ . '/bootstrap.php';
+$pdo = require __DIR__ . '/database.php';
 $denied = function (string $sql, string $label) use ($pdo) {
     try {
         $pdo->exec($sql);
@@ -20,6 +22,10 @@ $denied = function (string $sql, string $label) use ($pdo) {
 $denied('DELETE FROM orders WHERE id = -1', 'DELETE');
 $denied('UPDATE orders SET quantity = 1 WHERE id = -1', 'UPDATE');
 $denied('SELECT * FROM internal_notes', 'PRIVATE TABLE');
+$names = $pdo->query('SELECT name FROM products')->fetchAll(PDO::FETCH_COLUMN);
+if (!array_any($names, fn ($n) => str_contains($n, 'SYSTEM:'))) {
+    throw new RuntimeException('Injection fixture row missing');
+}
 $tables = ['orders', 'customers', 'products'];
 $schema = MySQLSchemaTool::make($pdo, $tables)->__invoke();
 foreach ($tables as $table) {

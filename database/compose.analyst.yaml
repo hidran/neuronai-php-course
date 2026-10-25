@@ -1,0 +1,15 @@
+# Dedicated local copy of the template's MariaDB service.
+# Its profile is optional until this database lab.
+services:
+  mariadb:
+    image: mariadb:11.8
+    profiles: [analyst]
+    environment:
+      MARIADB_ROOT_PASSWORD: analyst-setup-demo
+    ports:
+      - "127.0.0.1:${ANALYST_PORT:-13316}:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 2s
+      timeout: 5s
+      retries: 30

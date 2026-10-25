@@ -2,19 +2,26 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\DataAnalystAgent;
-use Dotenv\Dotenv;
+use App\Config\ProviderFactory;
 use NeuronAI\Chat\Messages\ToolResultMessage;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Tools\ToolOutput;
-Dotenv::createImmutable(dirname(__DIR__))->load();
-$pdo = require __DIR__ . '/../database/connect.php';
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
+$pdo = require __DIR__ . '/database.php';
 $question = $argv[1] ?? 'What is our October 2026 revenue'
     . ' and order count?';
-$agent = DataAnalystAgent::make($pdo)
+$agent = DataAnalystAgent::make($provider, $pdo)
     ->toolMaxRuns(5)
-    ->toolErrorHandler(fn () => ToolOutput::error(
-        'Data unavailable. Stop and report that to the user.'
-    ))
+    ->toolErrorHandler(function (Throwable $e): ?ToolOutput {
+        if (!$e instanceof PDOException) {
+            return null;
+        }
+        fwrite(STDERR, "Database error: {$e->getMessage()}" . PHP_EOL);
+        return ToolOutput::error(
+            'Data unavailable. Stop and report that to the user.'
+        );
+    })
     ->setThreadId('database-analyst');
 $state = $agent->chat(new UserMessage($question));
 foreach ($state->getSteps() as $step) {
