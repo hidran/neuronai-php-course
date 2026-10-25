@@ -2,29 +2,26 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\CouponExtractor;
+use App\Config\ProviderFactory;
 use App\Output\Coupon;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Exceptions\AgentException;
 use NeuronAI\StructuredOutput\Deserializer\DeserializerException;
 use NeuronAI\StructuredOutput\Validation\Validator;
-$candidate = new Coupon();
-$candidate->code = 'ab12';
-$candidate->summary = '';
-$violations = Validator::validate($candidate);
+$violations = Validator::validate(new Coupon('ab12', ''));
 if (count($violations) !== 2) {
     throw new RuntimeException('Expected two local violations.');
 }
 echo 'Known invalid fixture: rejected' . PHP_EOL;
-$candidate->code = 'XY9876';
-$candidate->summary = 'Free delivery';
-if (Validator::validate($candidate) !== []) {
+$valid = new Coupon(code: 'XY9876', summary: 'Free delivery');
+if (Validator::validate($valid) !== []) {
     throw new RuntimeException('Expected valid local fixture.');
 }
 echo 'Known valid fixture: accepted' . PHP_EOL;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 try {
-    $coupon = CouponExtractor::make()->setThreadId('exercise')
+    $coupon = CouponExtractor::make($provider)->setThreadId('exercise')
         ->structured(
             messages: new UserMessage('XY9876 offers free delivery.'),
             class: Coupon::class,

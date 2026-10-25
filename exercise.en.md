@@ -1,9 +1,9 @@
 # Validate a coupon before trusting it
 
-Use the completed Coupon and CouponExtractor classes. Install the project's Composer dependencies and configure your own Anthropic credentials locally. Run all commands in PhpStorm Terminal.
+Use the completed Coupon and CouponExtractor classes. Install the project's Composer dependencies and set your provider and key in your own .env (the Settings and ProviderFactory classes of the project choose the provider). Run all commands in PhpStorm Terminal.
 
-1. Create a Coupon with code `ab12` and an empty summary. Validate it without calling a provider. Assert that it produces two violations.
-2. Change its code to `XY9876` and its summary to `Free delivery`. Assert that it has no violations.
+1. Create a Coupon with code `ab12` and an empty summary, with the constructor. Validate it without calling a provider. Assert that it produces two violations.
+2. Create a second Coupon with code `XY9876` and summary `Free delivery` (the class is read only, so we build a new object). Assert that it has no violations.
 3. Extract from `XY9876 offers free delivery.` using `maxRetries: 0`. Catch the two structured-processing exception types if extraction fails.
 4. On success, check that the returned code equals the code in the source. Explain why the regular expression alone cannot establish that fact.
 5. Explain the maximum number of attempts with retry budgets zero, one and two.
@@ -23,29 +23,26 @@ Save as `examples/exercise-validation-retry.php`:
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\CouponExtractor;
+use App\Config\ProviderFactory;
 use App\Output\Coupon;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Exceptions\AgentException;
 use NeuronAI\StructuredOutput\Deserializer\DeserializerException;
 use NeuronAI\StructuredOutput\Validation\Validator;
-$candidate = new Coupon();
-$candidate->code = 'ab12';
-$candidate->summary = '';
-$violations = Validator::validate($candidate);
+$violations = Validator::validate(new Coupon('ab12', ''));
 if (count($violations) !== 2) {
     throw new RuntimeException('Expected two local violations.');
 }
 echo 'Known invalid fixture: rejected' . PHP_EOL;
-$candidate->code = 'XY9876';
-$candidate->summary = 'Free delivery';
-if (Validator::validate($candidate) !== []) {
+$valid = new Coupon(code: 'XY9876', summary: 'Free delivery');
+if (Validator::validate($valid) !== []) {
     throw new RuntimeException('Expected valid local fixture.');
 }
 echo 'Known valid fixture: accepted' . PHP_EOL;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 try {
-    $coupon = CouponExtractor::make()->setThreadId('exercise')
+    $coupon = CouponExtractor::make($provider)->setThreadId('exercise')
         ->structured(
             messages: new UserMessage('XY9876 offers free delivery.'),
             class: Coupon::class,
@@ -72,4 +69,4 @@ Summary: Free delivery
 Exercise complete.
 ```
 
-The summary wording can vary. The empty required summary violates the minimum word count; the malformed code violates Regex. Direct validation returns messages without model calls. The live request allows one attempt, because there are zero retries. Budgets one and two allow at most two and three attempts respectively. A well-formed invented code can pass Regex, so the solution separately checks equality with the source code. A processing failure takes the explicit failure path; a configuration or network error is outside this specific catch.
+The summary wording can vary. The empty required summary violates the minimum word count; the malformed code violates Regex. Direct validation returns messages without model calls. The live request allows one attempt, because there are zero retries. Budgets one and two allow at most two and three attempts respectively. A well-formed invented code can pass Regex, so the solution separately checks equality with the source code. A processing failure takes the explicit failure path; a configuration, provider or network error is outside this specific catch and stops the script.

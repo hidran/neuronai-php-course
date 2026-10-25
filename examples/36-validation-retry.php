@@ -2,21 +2,23 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\CouponExtractor;
+use App\Config\ProviderFactory;
 use App\Output\Coupon;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Exceptions\AgentException;
 use NeuronAI\StructuredOutput\Deserializer\DeserializerException;
 use NeuronAI\StructuredOutput\Validation\Validator;
-$candidate = new Coupon();
-$candidate->code = 'bad';
-$candidate->summary = 'This special offer has far too many words';
+$candidate = new Coupon(
+    code: 'bad',
+    summary: 'This special offer has far too many words',
+);
 foreach (Validator::validate($candidate) as $violation) {
     echo $violation . PHP_EOL;
 }
 echo 'Local validation complete.' . PHP_EOL;
-Dotenv::createImmutable(dirname(__DIR__))->load();
-$agent = CouponExtractor::make()->setThreadId('coupon');
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
+$agent = CouponExtractor::make($provider)->setThreadId('coupon');
 try {
     $coupon = $agent->structured(
         messages: new UserMessage('AB1234 gives free shipping.'),
@@ -25,7 +27,10 @@ try {
     );
     echo 'Code: ' . $coupon->code . PHP_EOL;
     echo 'Summary: ' . $coupon->summary . PHP_EOL;
-} catch (AgentException | DeserializerException $error) {
-    echo 'No valid coupon: ' . $error->getMessage() . PHP_EOL;
+} catch (DeserializerException $error) {
+    echo 'Shape rejected: ' . $error->getMessage() . PHP_EOL;
+} catch (AgentException $error) {
+    echo 'Rules rejected after the retry: ' . $error->getMessage()
+        . PHP_EOL;
 }
 echo 'Bounded extraction complete.' . PHP_EOL;
