@@ -2,14 +2,14 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\AssistantAgent;
+use App\Config\ProviderFactory;
 use App\Tools\ProjectToolkit;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\ToolCallMessage;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Tools\Toolkits\Calculator\CalculatorToolkit;
-Dotenv::createImmutable(dirname(__DIR__))->load();
-$file = dirname(__DIR__) . '/storage/assistant/chat.sqlite';
-$kit = ProjectToolkit::make(new PDO("sqlite:{$file}"));
+$settings = require __DIR__ . '/bootstrap.php';
+$pdo = require __DIR__ . '/database.php';
+$kit = new ProjectToolkit($pdo);
 if ($argc < 2) {
     foreach ([CalculatorToolkit::make(), $kit] as $toolkit) {
         $names = [];
@@ -22,7 +22,8 @@ if ($argc < 2) {
     }
     exit;
 }
-$state = AssistantAgent::make()
+$provider = new ProviderFactory($settings)->create();
+$state = AssistantAgent::make($provider)
     ->addTool($kit)
     ->setThreadId('toolkits')
     ->chat(new UserMessage($argv[1]));

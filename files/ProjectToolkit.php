@@ -4,25 +4,27 @@ namespace App\Tools;
 use App\PackageVersionTool;
 use NeuronAI\Tools\Toolkits\AbstractToolkit;
 use PDO;
-class ProjectToolkit extends AbstractToolkit
+final class ProjectToolkit extends AbstractToolkit
 {
-    public function __construct(private PDO $pdo)
+    public function __construct(private readonly PDO $pdo)
     {
     }
+    #[\Override]
     public function guidelines(): ?string
     {
         return 'These tools answer questions about this project.'
-            . ' For the exact version of one package, use'
-            . ' get_package_version. To compare packages with'
-            . ' minimum versions, send them all in one'
-            . ' check_packages call.';
+            . ' For the exact version of one package, use the'
+            . ' package version tool. To compare several packages'
+            . ' with minimum versions, send them all in one call'
+            . ' of the package check tool.';
     }
+    #[\Override]
     public function provide(): array
     {
         return [
-            PackageVersionTool::make(),
-            CountMessagesTool::make($this->pdo),
-            CheckPackagesTool::make(),
+            new PackageVersionTool(),
+            new CountMessagesTool($this->pdo),
+            new CheckPackagesTool(),
         ];
     }
 }
