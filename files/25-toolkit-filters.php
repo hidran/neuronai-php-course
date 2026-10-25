@@ -2,10 +2,10 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\AssistantAgent;
+use App\Config\ProviderFactory;
 use App\Tools\CheckPackagesTool;
 use App\Tools\FindPackagesTool;
 use App\Tools\ProjectToolkit;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\ToolCallMessage;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\Tools\ToolInterface;
@@ -14,24 +14,25 @@ use NeuronAI\Tools\Toolkits\Calculator\EvaluateTool;
 use NeuronAI\Tools\Toolkits\Calculator\MeanTool;
 use NeuronAI\Tools\Toolkits\Firecrawl\FirecrawlSearchTool;
 use NeuronAI\Tools\Toolkits\Firecrawl\FirecrawlToolkit;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$pdo = require __DIR__ . '/database.php';
 $math = CalculatorToolkit::make()
     ->only([EvaluateTool::class, MeanTool::class]);
-$file = dirname(__DIR__) . '/storage/assistant/chat.sqlite';
-$project = ProjectToolkit::make(new PDO("sqlite:{$file}"))
+$project = new ProjectToolkit($pdo)
     ->exclude([CheckPackagesTool::class])
-    ->add(FindPackagesTool::make());
-$web = FirecrawlToolkit::make($_ENV['FIRECRAWL_KEY'] ?? '')
+    ->add(new FindPackagesTool());
+// Listing only: the Firecrawl key is not needed to read the schemas.
+$web = FirecrawlToolkit::make('not-needed-for-listing')
     ->with(
         FirecrawlSearchTool::class,
         fn (ToolInterface $tool) => $tool->setName('firecrawl_search'),
     );
 if ($argc < 2) {
     foreach ([$math, $project, $web] as $kit) {
-        $names = array_map(
-            fn (ToolInterface $tool) => $tool->getName(),
-            $kit->tools(),
-        );
+        $names = $kit->tools()
+            |> (fn (array $t) => array_map(
+                fn (ToolInterface $tool) => $tool->getName(), $t,
+            ));
         echo count($names) . ' tools: '
             . implode(', ', $names) . PHP_EOL;
     }
@@ -41,7 +42,8 @@ if ($argc < 2) {
     }
     exit;
 }
-$state = AssistantAgent::make()
+$provider = new ProviderFactory($settings)->create();
+$state = AssistantAgent::make($provider)
     ->addTool([$math, $project])
     ->setThreadId('toolkit-filters')
     ->chat(new UserMessage($argv[1]));
