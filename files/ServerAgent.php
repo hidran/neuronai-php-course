@@ -3,23 +3,31 @@ declare(strict_types=1);
 namespace App\Agents;
 use App\Tools\ServerConfigurationTool;
 use NeuronAI\Agent\Agent;
+use NeuronAI\Agent\SystemPrompt;
+use NeuronAI\Chat\Messages\SystemMessage;
 use NeuronAI\Providers\AIProviderInterface;
-use NeuronAI\Providers\Anthropic\Anthropic;
-class ServerAgent extends Agent
+final class ServerAgent extends Agent
 {
-    protected function provider(): AIProviderInterface
+    public function __construct(AIProviderInterface $provider)
     {
-        return new Anthropic(
-            key: $_ENV['ANTHROPIC_KEY'],
-            model: $_ENV['ANTHROPIC_MODEL'] ?? 'claude-sonnet-5-5',
-        );
+        parent::__construct();
+        $this->setAiProvider($provider);
     }
-    protected function instructions(): string
+    #[\Override]
+    protected function instructions(): SystemMessage
     {
-        return 'Use the configuration tool for each server requested. '
-            . 'Never invent addresses. Give a short plain-text answer '
-            . 'using the returned fixture addresses.';
+        return new SystemMessage((string) new SystemPrompt(
+            background: ['You answer questions about our servers.'],
+            output: [
+                'Give a short plain text answer with the addresses.',
+            ],
+            toolsUsage: [
+                'Use the configuration tool for each server requested.',
+                'Never invent addresses.',
+            ],
+        ));
     }
+    #[\Override]
     protected function tools(): array
     {
         return [new ServerConfigurationTool()];

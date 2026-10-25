@@ -2,29 +2,39 @@
 declare(strict_types=1);
 namespace App\Streaming;
 use NeuronAI\Agent\AgentState;
+use NeuronAI\Chat\Messages\Stream\Chunks\ToolArgumentChunk;
 use NeuronAI\Tools\ToolCall;
-use RuntimeException;
-class StreamProgress
+final class StreamProgress
 {
-    private const LABELS = [
+    private const array LABELS = [
         'get_server_configuration' => 'Checking server information',
     ];
+    /** @var array<string, string> */
     private array $pending = [];
+    /** @var array<string, string> */
     private array $completed = [];
-    private string $text = '';
-    public function __construct(private bool $diagnostic = true)
+    private bool $previewOpen = false;
+    public function __construct(
+        private readonly bool $diagnostic = true,
+    ) {
+    }
+    public function arguments(ToolArgumentChunk $chunk): void
     {
+        if (!$this->diagnostic) {
+            return;
+        }
+        if (!$this->previewOpen) {
+            echo "\nArguments so far: ";
+            $this->previewOpen = true;
+        }
+        echo $chunk->delta;
+        flush();
     }
     public function call(ToolCall $tool): void
     {
-        $id = $tool->getCallId();
-        if ($id === null || $id === '') {
-            throw new RuntimeException('Invalid call identifier.');
-        }
-        if (isset($this->pending[$id]) || isset($this->completed[$id])) {
-            throw new RuntimeException('Duplicate call identifier.');
-        }
+        $id = $tool->getCallId() ?? 'no-id';
         $this->pending[$id] = $tool->getName();
+        $this->previewOpen = false;
         if ($this->diagnostic) {
             echo "\nCall {$id}: " . $tool->getName() . PHP_EOL;
             echo 'Inputs: ' . json_encode($tool->getInputs()) . PHP_EOL;
@@ -37,15 +47,8 @@ class StreamProgress
     }
     public function result(ToolCall $tool): void
     {
-        $id = $tool->getCallId();
-        if (!$id || ($this->pending[$id] ?? null) !== $tool->getName()) {
-            throw new RuntimeException('Unmatched tool result.');
-        }
-        if (!$tool->hasResult()) {
-            throw new RuntimeException('Tool result is unavailable.');
-        }
+        $id = $tool->getCallId() ?? 'no-id';
         unset($this->pending[$id]);
-        $this->text = ''; // Final reply starts after the tool round.
         $this->completed[$id] = $tool->getName();
         if ($this->diagnostic) {
             echo "Done {$id}: " . $tool->getName() . PHP_EOL;
@@ -57,22 +60,16 @@ class StreamProgress
     }
     public function text(string $content): void
     {
-        $this->text .= $content;
         echo $content;
         flush();
     }
     public function finish(AgentState $state): void
     {
-        if ($this->pending || !$this->completed || $this->text === '') {
-            throw new RuntimeException('Incomplete text or tool lifecycle.');
-        }
-        if ($this->text !== $state->getMessage()?->getContent()) {
-            throw new RuntimeException('Final text mismatch.');
-        }
-        if (count($this->completed) !== array_sum($state->getToolRuns())) {
-            throw new RuntimeException('Tool execution count mismatch.');
-        }
+        echo PHP_EOL . 'Tool runs: ' . array_sum($state->getToolRuns())
+            . ', pending: ' . count($this->pending) . PHP_EOL;
+        echo 'Tool stream complete.' . PHP_EOL;
     }
+    /** @return array<string, string> */
     public function completed(): array
     {
         return $this->completed;

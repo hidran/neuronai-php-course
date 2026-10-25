@@ -4,36 +4,42 @@ namespace App\Streaming;
 use Generator;
 use NeuronAI\Agent\AgentState;
 use NeuronAI\Chat\Messages\Stream\Chunks\TextChunk;
+use NeuronAI\Chat\Messages\Stream\Chunks\ToolArgumentChunk;
 use NeuronAI\Chat\Messages\Stream\Chunks\ToolCallChunk;
 use NeuronAI\Chat\Messages\Stream\Chunks\ToolResultChunk;
-use Throwable;
-class ToolStreamConsumer
+use NeuronAI\Exceptions\NeuronException;
+final readonly class ToolStreamConsumer
 {
-    public static function consume(
-        Generator $stream,
-        StreamProgress $view,
-    ): ?AgentState {
+    public function __construct(private StreamProgress $view)
+    {
+    }
+    public function consume(Generator $stream): ?AgentState
+    {
         try {
             foreach ($stream as $chunk) {
-                if ($chunk instanceof ToolCallChunk) {
-                    $view->call($chunk->tool);
-                    continue;
-                }
-                if ($chunk instanceof ToolResultChunk) {
-                    $view->result($chunk->tool);
-                    continue;
-                }
-                if ($chunk instanceof TextChunk) {
-                    $view->text($chunk->content);
-                }
+                $this->render($chunk);
             }
-            $state = $stream->getReturn();
-            $view->finish($state);
-            echo "\nTool stream " . 'complete.' . PHP_EOL;
-            return $state;
-        } catch (Throwable) {
-            echo "\nThe answer did not finish." . PHP_EOL;
+        } catch (NeuronException $error) {
+            echo "\nThe answer did not finish: " . $error->getMessage()
+                . PHP_EOL;
             return null;
         }
+        $state = $stream->getReturn();
+        $this->view->finish($state);
+        return $state;
+    }
+    private function render(object $chunk): void
+    {
+        match (true) {
+            $chunk instanceof ToolArgumentChunk
+                => $this->view->arguments($chunk),
+            $chunk instanceof ToolCallChunk
+                => $this->view->call($chunk->tool),
+            $chunk instanceof ToolResultChunk
+                => $this->view->result($chunk->tool),
+            $chunk instanceof TextChunk
+                => $this->view->text($chunk->content),
+            default => null,
+        };
     }
 }

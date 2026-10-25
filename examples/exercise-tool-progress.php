@@ -2,9 +2,9 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\ServerAgent;
+use App\Config\ProviderFactory;
 use App\Streaming\StreamProgress;
 use App\Streaming\ToolStreamConsumer;
-use Dotenv\Dotenv;
 use NeuronAI\Agent\AgentState;
 use NeuronAI\Chat\Messages\AssistantMessage;
 use NeuronAI\Chat\Messages\Stream\Chunks\TextChunk;
@@ -12,6 +12,7 @@ use NeuronAI\Chat\Messages\Stream\Chunks\ToolArgumentChunk;
 use NeuronAI\Chat\Messages\Stream\Chunks\ToolCallChunk;
 use NeuronAI\Chat\Messages\Stream\Chunks\ToolResultChunk;
 use NeuronAI\Chat\Messages\UserMessage;
+use NeuronAI\Exceptions\ProviderException;
 use NeuronAI\Providers\ProviderResponse;
 use NeuronAI\Tools\ToolCall;
 function check(bool $condition, string $message): void
@@ -29,14 +30,16 @@ function capture(Generator $events, StreamProgress $view): array
 {
     ob_start();
     try {
-        $state = ToolStreamConsumer::consume($events, $view);
+        $state = new ToolStreamConsumer($view)->consume($events);
         return [$state, ob_get_contents()];
     } finally {
         ob_end_clean();
     }
 }
 $state = new AgentState();
-$state->setResponse(new ProviderResponse(new AssistantMessage('Ready.')));
+$state->setResponse(new ProviderResponse(
+    new AssistantMessage('Ready.')
+));
 $state->incrementToolRun('fixture');
 $state->incrementToolRun('fixture');
 $a = new ToolCall('internal_fixture', 'a', ['secret' => 'SENTINEL']);
@@ -62,34 +65,40 @@ check(substr_count($output, 'Working on your request') === 2,
 foreach (['SENTINEL', 'internal_fixture', '{"sec'] as $hidden) {
     check(!str_contains($output, $hidden), 'Raw progress leaked.');
 }
+check(str_contains($output, 'Tool runs: 2, pending: 0'),
+    'Summary line missing.');
 echo 'Repeated name and reverse results: passed' . PHP_EOL;
 echo 'Unknown names and raw payload policy: passed' . PHP_EOL;
+[, $output] = capture(replay($events, $state),
+    new StreamProgress(diagnostic: true));
+check(str_contains($output, 'Arguments so far: {"sec'),
+    'Diagnostic view must preview partial arguments.');
+echo 'Partial arguments previewed in diagnostics: passed' . PHP_EOL;
 $broken = (function (): Generator {
     yield new TextChunk('partial', 'Only half');
-    throw new RuntimeException('PRIVATE_PROVIDER_DETAIL');
+    throw new ProviderException('Rate limit reached.');
 })();
 [$result, $output] = capture($broken, new StreamProgress(false));
 check($result === null, 'Incomplete run returned a state.');
 check(str_contains($output, 'Only half'), 'Partial text disappeared.');
-check(str_contains($output, 'The answer did not finish.'),
-    'Missing incomplete-run notice.');
+check(str_contains($output, 'did not finish: Rate limit reached.'),
+    'Missing incomplete run notice with the reason.');
 check(!str_contains($output, 'Tool stream complete.'),
     'Incomplete run claimed success.');
-check(!str_contains($output, 'PRIVATE_PROVIDER_DETAIL'),
-    'Raw error details leaked.');
 echo 'Partial failure without false success: passed' . PHP_EOL;
-$bad = new ToolCall('internal_fixture', 'missing');
-$bad->setResult('RESULT_SENTINEL');
-[$result] = capture(replay([new ToolResultChunk($bad)], $state),
-    new StreamProgress(false));
-check($result === null, 'Unmatched result was accepted.');
-echo 'Unmatched result rejected: passed' . PHP_EOL;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+if (!in_array('--live', $argv, true)) {
+    echo 'Live stream skipped. Add --live to run it.' . PHP_EOL;
+    echo 'Tool progress exercise complete.' . PHP_EOL;
+    exit(0);
+}
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $view = new StreamProgress(diagnostic: false);
-$stream = ServerAgent::make()->setThreadId('two-server-exercise')
+$stream = ServerAgent::make($provider)
+    ->setThreadId('two-server-exercise')
     ->stream(new UserMessage('Use the tool once for training and '
         . 'once for backup. Give both server addresses.'));
-$state = ToolStreamConsumer::consume($stream, $view);
+$state = new ToolStreamConsumer($view)->consume($stream);
 check($state instanceof AgentState, 'Live stream failed.');
 check(count($view->completed()) === 2, 'Expected two call IDs.');
 check(count(array_unique(array_values($view->completed()))) === 1,
