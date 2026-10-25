@@ -1,0 +1,7 @@
+Cedar Support troubleshooting: the tracking page shows no movement
+
+First, confirm that the order number in the email matches the order in the account.
+Second, wait 24 hours after the carrier scan; some hubs batch their updates.
+Third, check whether the parcel is marked as delivered to a neighbour or a pickup point.
+
+If none of these steps explains the missing movement, open a support request with the order number and the delivery postcode. Do not open a second request for the same order.
