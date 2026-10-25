@@ -2,11 +2,12 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\AssistantAgent;
-use Dotenv\Dotenv;
+use App\Config\ProviderFactory;
 use NeuronAI\Chat\Messages\AssistantMessage;
 use NeuronAI\Chat\Messages\ContentBlocks\TextContent;
 use NeuronAI\Chat\Messages\UserMessage;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $question = new UserMessage('What does this line return?');
 $question->addContent(
     new TextContent("str_contains('NeuronAI', 'AI')"),
@@ -26,7 +27,7 @@ $history = [
     $example,
     $question,
 ];
-$state = AssistantAgent::make()
+$state = AssistantAgent::make($provider)
     ->setThreadId('messages')
     ->chat($history);
 $answer = $state->getMessage();
