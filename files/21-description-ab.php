@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
-use App\Agents\AssistantAgent;
+use App\Config\ProviderFactory;
 use App\Tools\CountMessagesTool;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\ToolCallMessage;
 use NeuronAI\Chat\Messages\UserMessage;
-Dotenv::createImmutable(dirname(__DIR__))->load();
-$tool = CountMessagesTool::make(new PDO('sqlite::memory:'));
+$settings = require __DIR__ . '/bootstrap.php';
+$factory = new ProviderFactory($settings);
+$tool = new CountMessagesTool(new PDO('sqlite::memory:'));
 $variants = [
     'vague' => 'Counts messages.',
     'class' => $tool->getDescription(),
@@ -26,7 +26,7 @@ $questions = [
 $runs = 3;
 foreach ($variants as $label => $description) {
     $tool->setDescription($description);
-    $provider = AssistantAgent::make()->getProvider();
+    $provider = $factory->create();
     $provider->systemPrompt('Answer in one short sentence.');
     $provider->setTools([$tool]);
     $tally = ['needed' => 0, 'not needed' => 0];
