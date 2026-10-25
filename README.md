@@ -1,16 +1,16 @@
-# Source types and file identifiers
+# Source types and the file ID optimisation
 
-Source and verified exercise for **Agentic AI in PHP with NeuronAI**.
+Source and verified exercise for Agentic AI in PHP with NeuronAI.
 
-Use PHP 8.5 or later. Run `composer install`. Copy `.env.example` to `.env` and configure your own provider credentials for live calls. Keep private credentials out of Git.
+Use PHP 8.5 or later. Run `composer install`, copy `.env.example` to `.env`, and supply your own provider credentials privately for model calls. Keep `.env` out of Git.
 
-The project layout contains the finished example. The `files/` and `stages/` folders preserve variants for comparison.
+`files/` holds the lesson files as they appear in the video. The same files are placed where the project expects them: classes under `src/`, scripts under `examples/`, and fixtures, servers, tests and requests in their own folders.
 
 Runnable examples:
 
 - `php examples/43-source-types.php`
 - `php examples/exercise-source-references.php`
 
-Follow `exercise.en.md` for the exercise, expected checks and worked solution.
+Credentials are never included: every key comes from your own `.env`.
 
-For the HTTP client, copy `http-client.env.json.example` to `http-client.private.env.json`, set your own key privately, and select the studio environment in PhpStorm. Use the request files to upload each fixture before running its example or exercise. Create `storage/` if needed. Never commit upload responses or keys.
+Follow `exercise.en.md` for the practice task, its expected checks and the worked solution.

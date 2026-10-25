@@ -1,13 +1,16 @@
 <?php
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
+use App\Agents\SourceAgent;
+use App\Config\ProviderFactory;
+use App\Http\FilesApiClient;
 use App\SourceExamples;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Enums\SourceType;
 use NeuronAI\Chat\Messages\ContentBlocks\FileContent;
 use NeuronAI\Chat\Messages\ContentBlocks\ImageContent;
+use NeuronAI\HttpClient\Curl\CurlHttpClient;
+$settings = require __DIR__ . '/bootstrap.php';
 $root = dirname(__DIR__);
-Dotenv::createImmutable($root)->load();
 $path = $root . '/fixtures/sources/invoice.pdf';
 $link = new ImageContent(
     SourceExamples::PUBLIC_IMAGE,
@@ -31,6 +34,9 @@ $reference = new FileContent(
     SourceType::ID, 'application/pdf', 'invoice.pdf',
 );
 SourceExamples::summary([$link, $inline, $reference]);
-SourceExamples::ask($inline, 'MAPLE-731');
-SourceExamples::ask($reference, 'MAPLE-731');
+$provider = new ProviderFactory($settings)->create()
+    ->setHttpClient(new FilesApiClient(new CurlHttpClient()));
+$examples = new SourceExamples(SourceAgent::make($provider));
+$examples->ask($inline, 'MAPLE-731');
+$examples->ask($reference, 'MAPLE-731');
 echo 'Source comparison ' . 'complete.' . PHP_EOL;

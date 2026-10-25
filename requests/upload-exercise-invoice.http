@@ -1,22 +1,12 @@
-### Upload the teaching invoice with the studio environment
+### Upload the exercise invoice to the Anthropic Files API (studio environment)
 # @name uploadExerciseInvoice
 # @no-cookie-jar
-POST https://api.openai.com/v1/files
-Authorization: Bearer {{apiKey}}
+POST https://api.anthropic.com/v1/files
+x-api-key: {{apiKey}}
+anthropic-version: 2023-06-01
+anthropic-beta: files-api-2025-04-14
 Content-Type: multipart/form-data; boundary=lessonBoundary
 
---lessonBoundary
-Content-Disposition: form-data; name="purpose"
-
-user_data
---lessonBoundary
-Content-Disposition: form-data; name="expires_after[anchor]"
-
-created_at
---lessonBoundary
-Content-Disposition: form-data; name="expires_after[seconds]"
-
-86400
 --lessonBoundary
 Content-Disposition: form-data; name="file"; filename="exercise-invoice.pdf"
 Content-Type: application/pdf
@@ -25,9 +15,9 @@ Content-Type: application/pdf
 --lessonBoundary--
 
 > {%
-client.test("Teaching invoice uploaded", function () {
+client.test("Exercise invoice uploaded", function () {
     client.assert(response.status === 200, "Upload failed");
-    client.assert(response.body.id.startsWith("file-"), "No file ID");
+    client.assert(response.body.id.startsWith("file_"), "No file ID");
 });
 %}
 >>! ../storage/exercise-upload.json
