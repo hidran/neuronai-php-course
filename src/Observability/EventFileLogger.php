@@ -3,11 +3,12 @@ declare(strict_types=1);
 namespace App\Observability;
 use Psr\Log\AbstractLogger;
 use Stringable;
-class EventFileLogger extends AbstractLogger
+final class EventFileLogger extends AbstractLogger
 {
-    public function __construct(private string $path)
+    public function __construct(private readonly string $path)
     {
     }
+    #[\Override]
     public function log($level, string|Stringable $message,
         array $context = []): void
     {

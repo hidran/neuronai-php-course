@@ -2,16 +2,17 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\ObservedWeatherAgent;
-use Dotenv\Dotenv;
-use NeuronAI\Observability\ObservabilityEvent;
+use App\Config\ProviderFactory;
 use NeuronAI\Agent\Observability\ToolCalled;
 use NeuronAI\Chat\Messages\UserMessage;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+use NeuronAI\Observability\ObservabilityEvent;
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $counts = new ArrayObject(['broad' => 0, 'first' => 0, 'second' => 0]);
 $question = 'Use fixture temperatures for Turin and Milan '
     . 'and calculate their average with the mean tool.';
 foreach (['first', 'second'] as $label) {
-    $agent = ObservedWeatherAgent::make()
+    $agent = ObservedWeatherAgent::make($provider)
         ->setThreadId('exercise-' . $label . '-' . uniqid());
     if ($label === 'first') {
         $agent->subscribe(ObservabilityEvent::class,

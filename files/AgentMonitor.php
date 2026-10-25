@@ -6,38 +6,34 @@ use NeuronAI\Agent\Agent;
 use NeuronAI\Agent\Observability\ToolCalled;
 use NeuronAI\Observability\LogListener;
 use NeuronAI\Observability\ObservabilityEvent;
-class AgentMonitoring
+use Psr\Log\LoggerInterface;
+final readonly class AgentMonitor
 {
-    public static function local(Agent $agent): void
+    public function __construct(
+        private ?LoggerInterface $logger = null,
+        private ?InspectorSubscriber $inspector = null,
+    ) {
+    }
+    public function attach(Agent $agent): Agent
     {
         $agent->subscribe(ObservabilityEvent::class,
             function (ObservabilityEvent $event): void {
                 echo 'Event: ' . $event->name() . PHP_EOL;
             });
-    }
-    public static function tools(Agent $agent): void
-    {
         $agent->subscribe(ToolCalled::class,
             function (ToolCalled $event): void {
                 echo 'Completed tool: ' . $event->tool->getName()
                     . ' ' . json_encode($event->tool->getInputs())
                     . PHP_EOL;
             });
-    }
-    public static function logger(Agent $agent, string $path): void
-    {
-        $logger = new EventFileLogger($path);
-        $agent->subscribe(ObservabilityEvent::class,
-            new LogListener($logger));
-    }
-    public static function backend(Agent $agent): void
-    {
-        // Add the listener here.
-        // Add the listener here.
-        // Add the listener here.
-        // Add the listener here.
-        // Add the listener here.
-        // Add the listener here.
-        // Add the listener here.
+        if ($this->logger !== null) {
+            $agent->subscribe(ObservabilityEvent::class,
+                new LogListener($this->logger));
+        }
+        if ($this->inspector !== null) {
+            $agent->subscribe(ObservabilityEvent::class,
+                $this->inspector);
+        }
+        return $agent;
     }
 }
