@@ -2,12 +2,13 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\StreamingAgent;
-use Dotenv\Dotenv;
+use App\Config\ProviderFactory;
 use NeuronAI\Chat\Messages\Stream\Chunks\TextChunk;
 use NeuronAI\Chat\Messages\UserMessage;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $message = new UserMessage('Explain why PHP uses namespaces.');
-$agent = StreamingAgent::make()->setThreadId('stream-demo');
+$agent = StreamingAgent::make($provider)->setThreadId('stream-demo');
 $started = microtime(true);
 $stream = $agent->stream($message);
 echo 'Stream value: ' . $stream::class . PHP_EOL;

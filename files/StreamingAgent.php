@@ -2,20 +2,25 @@
 declare(strict_types=1);
 namespace App\Agents;
 use NeuronAI\Agent\Agent;
+use NeuronAI\Agent\SystemPrompt;
+use NeuronAI\Chat\Messages\SystemMessage;
 use NeuronAI\Providers\AIProviderInterface;
-use NeuronAI\Providers\Anthropic\Anthropic;
-class StreamingAgent extends Agent
+final class StreamingAgent extends Agent
 {
-    protected function provider(): AIProviderInterface
+    public function __construct(AIProviderInterface $provider)
     {
-        return new Anthropic(
-            key: $_ENV['ANTHROPIC_KEY'],
-            model: $_ENV['ANTHROPIC_MODEL'] ?? 'claude-sonnet-5-5',
-        );
+        parent::__construct();
+        $this->setAiProvider($provider);
     }
-    protected function instructions(): string
+    #[\Override]
+    protected function instructions(): SystemMessage
     {
-        return 'You are a PHP teacher. Use plain text. '
-            . 'Answer in four short sentences, without tools.';
+        return new SystemMessage((string) new SystemPrompt(
+            background: ['You are a PHP teacher.'],
+            output: [
+                'Use plain text, no lists and no code blocks.',
+                'Answer in four short sentences, without tools.',
+            ],
+        ));
     }
 }

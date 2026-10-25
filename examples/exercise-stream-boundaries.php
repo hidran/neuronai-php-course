@@ -2,7 +2,7 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\StreamingAgent;
-use Dotenv\Dotenv;
+use App\Config\ProviderFactory;
 use NeuronAI\Agent\AgentState;
 use NeuronAI\Chat\Messages\Stream\Chunks\TextChunk;
 use NeuronAI\Chat\Messages\UserMessage;
@@ -27,7 +27,7 @@ function collectText(iterable $events): array
 }
 $cases = [
     ['split word', ['name', 'space', 's'], 'namespaces'],
-    ['whitespace', [' Leading', ' ', 'space', "\n"], " Leading space\n"],
+    ['whitespace', [' Lead', ' ', 'space', "\n"], " Lead space\n"],
     ['UTF-8', ['caf', 'é', ' ☕'], 'café ☕'],
 ];
 foreach ($cases as [$name, $parts, $expected]) {
@@ -41,8 +41,9 @@ foreach ($cases as [$name, $parts, $expected]) {
     check($count === count($parts), $name . ': wrong text count');
     echo 'Boundary case passed: ' . $name . PHP_EOL;
 }
-Dotenv::createImmutable(dirname(__DIR__))->load();
-$stream = StreamingAgent::make()
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
+$stream = StreamingAgent::make($provider)
     ->setThreadId('boundary-exercise')
     ->stream(new UserMessage('Explain a PHP namespace collision.'));
 check($stream instanceof Generator, 'Expected a generator.');

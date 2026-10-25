@@ -10,7 +10,7 @@ Build a consumer that handles only nonempty `TextChunk` objects and returns both
 
 Use exceptions for failed checks. Do not rely on PHP's configurable `assert()` behavior. Do not trim fragments or add separators.
 
-Copy the completed solution `files/exercise-stream-boundaries.php` to your project's `examples/` folder. Keep `StreamingAgent.php` in `src/Agents/`, install the project dependencies, and configure the Anthropic provider privately. Run:
+Copy the completed solution `files/exercise-stream-boundaries.php` to your project's `examples/` folder. Keep `StreamingAgent.php` in `src/Agents/`, install the project dependencies, and keep the keys and `NEURON_PROVIDER` in your private `.env` (the script loads them through `examples/bootstrap.php` and `ProviderFactory`). Run:
 
 ```text
 php examples/exercise-stream-boundaries.php
