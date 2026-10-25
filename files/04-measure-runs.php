@@ -1,12 +1,17 @@
 <?php
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
+use App\Config\ProviderFactory;
+use App\Config\Settings;
 use App\HelloAgent;
+use App\Support\Price;
 use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\UserMessage;
 Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = Settings::fromEnv($_ENV);
+$provider = new ProviderFactory($settings)->create();
 // Dollars per million tokens. Prices change: check your provider.
-const EXAMPLE_PRICE_PER_MILLION = ['input' => 3.0, 'output' => 15.0];
+$price = new Price(inputPerMillion: 3.0, outputPerMillion: 15.0);
 $runs = [
     'hello' => 'What is an AI agent, in plain words?',
     'tool' => 'Which neuron-core/neuron-ai version is installed here?',
@@ -15,7 +20,7 @@ $costs = [];
 foreach ($runs as $name => $question) {
     echo "Run: $name" . PHP_EOL;
     $start = hrtime(true);
-    $state = HelloAgent::make()
+    $state = HelloAgent::make($provider)
         ->setThreadId($name)
         ->chat(new UserMessage($question));
     $ms = intdiv(hrtime(true) - $start, 1_000_000);
@@ -31,13 +36,13 @@ foreach ($runs as $name => $question) {
         echo "  Call $calls: {$usage->inputTokens} in, "
             . "{$usage->outputTokens} out" . PHP_EOL;
     }
-    $price = EXAMPLE_PRICE_PER_MILLION;
-    $costs[$name] = ($input * $price['input']
-        + $output * $price['output']) / 1_000_000;
+    $costs[$name] = $price->of($input, $output);
     echo "Calls: $calls, tokens in: $input, out: $output, $ms ms"
         . PHP_EOL . 'Estimated cost: $'
         . number_format($costs[$name], 4) . PHP_EOL;
 }
-echo 'The tool run cost '
-    . round($costs['tool'] / $costs['hello'], 1) . ' times as much'
-    . PHP_EOL;
+if ($costs['hello'] > 0) {
+    echo 'The tool run cost '
+        . round($costs['tool'] / $costs['hello'], 1)
+        . ' times as much' . PHP_EOL;
+}
