@@ -1,0 +1,16 @@
+{
+  "image_read": [
+    14,
+    18
+  ],
+  "image_block": [
+    19,
+    23
+  ],
+  "pdf_block": [
+    36,
+    41
+  ],
+  "pdf_placeholder_after_image": 36,
+  "combined_line": 48
+}

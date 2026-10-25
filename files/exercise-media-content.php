@@ -2,8 +2,8 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\MediaAgent;
+use App\Config\ProviderFactory;
 use App\MediaFixtures;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Enums\MediaType;
 use NeuronAI\Chat\Enums\SourceType;
 use NeuronAI\Chat\Messages\ContentBlocks\FileContent;
@@ -13,39 +13,28 @@ $directory = dirname(__DIR__) . '/fixtures/media';
 $fixtures = new MediaFixtures($directory);
 $facts = json_decode(
     file_get_contents($directory . '/expected.json'),
-    true, flags: JSON_THROW_ON_ERROR,
+    associative: true, flags: JSON_THROW_ON_ERROR,
 );
-$failed = false;
-try {
-    $fixtures->path('../outside.png', 'image/png');
-} catch (RuntimeException) {
-    $failed = true;
-}
-if (!$failed) {
-    throw new RuntimeException('Traversal was not refused.');
-}
-$failed = false;
-try {
-    $fixtures->path('shapes.png', 'application/pdf');
-} catch (RuntimeException) {
-    $failed = true;
-}
-if (!$failed) {
-    throw new RuntimeException('Wrong format was not refused.');
+foreach ([['../outside.png', 'image/png'],
+    ['shapes.png', 'application/pdf']] as [$name, $mime]) {
+    try {
+        $fixtures->path($name, $mime);
+        throw new RuntimeException("Accepted {$name} as {$mime}.");
+    } catch (RuntimeException $error) {
+        if (str_starts_with($error->getMessage(), 'Accepted')) {
+            throw $error;
+        }
+    }
 }
 $image = new UserMessage('Circle label?');
 $image->addContent(new ImageContent(
-    content: base64_encode(file_get_contents(
-        $fixtures->path('shapes.png', 'image/png')
-    )),
+    content: $fixtures->encoded('shapes.png', 'image/png'),
     sourceType: SourceType::BASE64,
     mediaType: MediaType::PNG,
 ));
 $pdf = new UserMessage('Crates, dock and review word?');
 $pdf->addContent(new FileContent(
-    content: base64_encode(file_get_contents(
-        $fixtures->path('note.pdf', 'application/pdf')
-    )),
+    content: $fixtures->encoded('note.pdf', 'application/pdf'),
     sourceType: SourceType::BASE64,
     mediaType: MediaType::PDF,
     filename: 'note.pdf',
@@ -60,7 +49,8 @@ if (!in_array('--live', $argv, true)) {
     echo 'Live queries skipped; pass --live to verify facts.' . PHP_EOL;
     exit(0);
 }
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $queries = [
     'image' => [$image, [$facts['image']['circle_label']]],
     'pdf' => [$pdf, [
@@ -68,15 +58,14 @@ $queries = [
         $facts['pdf']['dock'], $facts['pdf']['review_word'],
     ]],
 ];
-$normalize = static fn (string $s): string => strtolower(
-    preg_replace('/[^a-zA-Z0-9]/', '', $s)
-);
 foreach ($queries as $kind => [$message, $expected]) {
-    $agent = MediaAgent::make()->setThreadId('exercise-' . $kind);
+    $agent = MediaAgent::make($provider)
+        ->setThreadId('exercise-' . $kind);
     $reply = $agent->chat($message)->getMessage()?->getContent() ?? '';
     echo $kind . ': ' . $reply . PHP_EOL;
     foreach ($expected as $fact) {
-        if (!str_contains($normalize($reply), $normalize($fact))) {
+        if (!str_contains(MediaFixtures::normalize($reply),
+            MediaFixtures::normalize($fact))) {
             throw new RuntimeException('Source fact missing: ' . $kind);
         }
     }
