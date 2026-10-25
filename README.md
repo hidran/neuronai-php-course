@@ -1,7 +1,13 @@
 # Anatomy of a model call: the messages, the tool schema and the usage of our run
 
-Student-facing source for lesson `02-03-anatomy-of-a-model-call` in **Agentic AI in PHP with NeuronAI**.
+Source and verified exercise for Agentic AI in PHP with NeuronAI.
 
-`files/` contains the lesson code and configuration. `exercise.en.md` is included when available.
+Use PHP 8.5 or later. Run `composer install`, copy `.env.example` to `.env`, and supply your own provider credentials privately for model calls. Keep `.env` out of Git.
 
-The Udemy lecture includes a downloadable ZIP of this branch.
+`files/` holds the lesson files as they appear in the video. The same files are placed where the project expects them: classes under `src/`, scripts under `examples/`, and fixtures, servers, tests and requests in their own folders.
+
+Runnable examples:
+
+- `php examples/03-anatomy.php`
+
+Credentials are never included: every key comes from your own `.env`.
