@@ -1,9 +1,6 @@
 <?php
-
 declare(strict_types=1);
-
 namespace App\Tools;
-
 use Composer\InstalledVersions;
 use NeuronAI\Tools\ArrayProperty;
 use NeuronAI\Tools\ObjectProperty;
@@ -11,17 +8,12 @@ use NeuronAI\Tools\PropertyType;
 use NeuronAI\Tools\Tool;
 use NeuronAI\Tools\ToolOutput;
 use NeuronAI\Tools\ToolProperty;
-
-class CheckPackagesTool extends Tool
+final class CheckPackagesTool extends Tool
 {
     protected string $name = 'check_packages';
-
     protected ?string $description = 'Checks Composer packages of'
         . ' this project against minimum versions.';
-
-    /**
-     * Properties are the input arguments of the __invoke method.
-     */
+    #[\Override]
     protected function properties(): array
     {
         $package = new ToolProperty(
@@ -49,22 +41,18 @@ class CheckPackagesTool extends Tool
             ),
         ];
     }
-
-    /**
-     * Implementing the tool logic
-     */
     public function __invoke(array $requirements): ToolOutput
     {
         $lines = [];
         foreach ($requirements as $item) {
-            $name = $item['package'];
-            $minimum = $item['minimum'] ?? '0';
+            $name = (string) ($item['package'] ?? '');
+            $minimum = (string) ($item['minimum'] ?? '0');
             if (!InstalledVersions::isInstalled($name)) {
                 $lines[] = "{$name}: not installed";
                 continue;
             }
-            $version = InstalledVersions::getVersion($name);
-            $ok = version_compare($version, $minimum, '>=');
+            $version = InstalledVersions::getPrettyVersion($name);
+            $ok = version_compare(ltrim($version, 'v'), $minimum, '>=');
             $lines[] = "{$name}: {$version}, "
                 . ($ok ? 'meets' : 'below') . " {$minimum}";
         }
