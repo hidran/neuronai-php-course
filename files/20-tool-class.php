@@ -2,19 +2,20 @@
 declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 use App\Agents\AssistantAgent;
+use App\Config\ProviderFactory;
 use App\Tools\CountMessagesTool;
-use Dotenv\Dotenv;
 use NeuronAI\Chat\Messages\UserMessage;
-Dotenv::createImmutable(dirname(__DIR__))->load();
+$settings = require __DIR__ . '/bootstrap.php';
+$provider = new ProviderFactory($settings)->create();
 $memory = new PDO('sqlite::memory:');
 $memory->exec('CREATE TABLE chat_messages (thread_id TEXT)');
 $memory->exec("INSERT INTO chat_messages VALUES ('demo'), ('demo')");
-$test = CountMessagesTool::make($memory);
+$test = new CountMessagesTool($memory);
 echo 'Test call: ' . $test('demo') . PHP_EOL;
-$file = dirname(__DIR__) . '/storage/assistant/chat.sqlite';
-$tool = CountMessagesTool::make(new PDO("sqlite:{$file}"));
+$pdo = require __DIR__ . '/database.php';
+$tool = new CountMessagesTool($pdo);
 $question = $argv[1] ?? 'How many messages are stored on thread bob?';
-$state = AssistantAgent::make()
+$state = AssistantAgent::make($provider)
     ->addTool($tool)
     ->setThreadId('tool-class')
     ->chat(new UserMessage($question));

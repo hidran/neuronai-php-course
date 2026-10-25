@@ -1,28 +1,20 @@
 <?php
-
 declare(strict_types=1);
-
 namespace App\Tools;
-
 use NeuronAI\Tools\PropertyType;
 use NeuronAI\Tools\Tool;
 use NeuronAI\Tools\ToolOutput;
 use NeuronAI\Tools\ToolProperty;
 use PDO;
-
-class CountMessagesTool extends Tool
+final class CountMessagesTool extends Tool
 {
     protected string $name = 'count_messages';
     protected ?string $description = 'Counts the messages our assistant'
         . ' stored in SQLite for one chat thread.';
-
-    public function __construct(private PDO $pdo)
+    public function __construct(private readonly PDO $pdo)
     {
     }
-
-    /**
-     * Properties are the input arguments of the __invoke method.
-     */
+    #[\Override]
     protected function properties(): array
     {
         return [
@@ -34,10 +26,6 @@ class CountMessagesTool extends Tool
             ),
         ];
     }
-
-    /**
-     * Implementing the tool logic
-     */
     public function __invoke(string $thread): ToolOutput
     {
         $query = $this->pdo->prepare(
