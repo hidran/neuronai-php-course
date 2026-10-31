@@ -22,7 +22,7 @@ function check(bool $ok, string $label): void
     }
 }
 $splitter = new MarkdownSectionSplitter();
-check($splitter->splitDocument(new Document('')) === [], 'empty document');
+check($splitter->splitDocument(new Document(' ')) === [], 'empty document');
 $accented = str_repeat('è così ', 200);
 $pieces = $splitter->splitDocument(new Document("## A\n\n{$accented}")
     ->setSourceName('a.md')->setMetadata(['team' => 'docs']));

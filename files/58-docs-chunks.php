@@ -10,7 +10,7 @@ $short = new Document(
 printf("Short guide: %d chunks\n",
     count($splitter->splitDocument($short)));
 printf("Empty document: %d chunks\n",
-    count($splitter->splitDocument(new Document(''))));
+    count($splitter->splitDocument(new Document(' '))));
 $text = str_repeat('Una frase lunga sulle regole, con accenti è. ', 12);
 $long = new Document("## Long\n\n{$text}\n\n{$text}\n\n{$text}{$text}")
     ->setSourceType('files')->setSourceName('long.md')
