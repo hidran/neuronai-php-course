@@ -75,7 +75,7 @@ $checks = [
             && $c->getSourceName() === $faq
             && str_starts_with($c->getMetadata()['question'] ?? '', 'Q: '),
     ),
-    'an empty page gives no chunks' => (new FaqSplitter())->splitDocument(new Document('')) === [],
+    'a whitespace-only page gives no chunks' => (new FaqSplitter())->splitDocument(new Document(" \n\t")) === [],
 ];
 foreach ($checks as $label => $ok) {
     printf("%s %s\n", $ok ? 'ok  ' : 'FAIL', $label);

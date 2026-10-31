@@ -9,6 +9,7 @@ use App\Rag\ChunkComparison;
 use App\Rag\HeadingSplitter;
 use App\Rag\KeywordEmbeddings;
 use NeuronAI\RAG\Document;
+use NeuronAI\RAG\Schema\DocumentSchemaException;
 use NeuronAI\RAG\Splitter\DelimiterTextSplitter;
 use NeuronAI\RAG\Splitter\SentenceTextSplitter;
 $path = __DIR__ . '/fixtures/rag-chunks/returns-guide.md';
@@ -27,8 +28,14 @@ $check($custom[1]->getMetadata()['heading_path'] === 'Returns guide > Refunds',
 $check($custom[1]->getMetadata()['language'] === 'en', 'metadata kept');
 $check(str_starts_with($custom[1]->getContent(), '## Refunds'),
     'heading text kept');
-$check(new HeadingSplitter()->splitDocument(new Document('')) === [],
-    'empty string gives no chunks');
+$check(new HeadingSplitter()->splitDocument(new Document(" \n\t")) === [],
+    'whitespace-only document gives no chunks');
+try {
+    new Document('');
+    throw new RuntimeException('FAILED: empty document content must be rejected');
+} catch (DocumentSchemaException) {
+    // Empty content is rejected before a splitter receives the document.
+}
 $long = new Document("## Notes\n\n" . str_repeat('Every parcel is checked. ', 10));
 $pieces = new HeadingSplitter(maxLength: 60)->splitDocument($long);
 $check(count($pieces) > 1 && max(array_map(
