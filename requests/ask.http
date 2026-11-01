@@ -1,0 +1,24 @@
+### Ask the support assistant
+POST http://127.0.0.1:8000/api/ask
+Accept: application/json
+Content-Type: application/json
+
+{
+  "message": "When is your support desk open?"
+}
+
+### A request with the message missing
+POST http://127.0.0.1:8000/api/ask
+Accept: application/json
+Content-Type: application/json
+
+{}
+
+### A message of the wrong type
+POST http://127.0.0.1:8000/api/ask
+Accept: application/json
+Content-Type: application/json
+
+{
+  "message": 42
+}
