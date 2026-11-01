@@ -1,6 +1,4 @@
-# Cedar Support refund policy
+# Refund policy: processing time
 
-Unused items can be returned within 30 days of delivery.
-Opened lamp shades cannot be refunded.
-An approved refund goes back to the original payment method.
+An approved refund goes back to the original payment method, such as your credit card.
 Banks usually show the money within 5 business days of approval.
