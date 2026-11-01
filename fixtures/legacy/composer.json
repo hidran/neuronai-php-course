@@ -1,0 +1,17 @@
+{
+    "name": "acme/intranet",
+    "require": {
+        "php": ">=7.4",
+        "swiftmailer/swiftmailer": "6.3.0"
+    },
+    "autoload": {
+        "classmap": [
+            "lib/"
+        ]
+    },
+    "config": {
+        "platform": {
+            "php": "7.4.33"
+        }
+    }
+}
