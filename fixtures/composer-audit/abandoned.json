@@ -1,0 +1,6 @@
+{
+    "advisories": [],
+    "abandoned": {
+        "swiftmailer/swiftmailer": "symfony/mailer"
+    }
+}

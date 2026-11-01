@@ -1,0 +1,4 @@
+#!/bin/sh
+# Stands in for a Composer without network: no report on stdout.
+echo "network unreachable" >&2
+exit 1

@@ -1,0 +1,59 @@
+{
+    "report": {
+        "summary": "Tests are configured; no CI workflow runs them.",
+        "score": 90,
+        "findings": [
+            {
+                "severity": "medium",
+                "category": "ci",
+                "description": "No CI workflow was found.",
+                "recommendation": "Add a workflow that runs PHPUnit.",
+                "subject": ".github/workflows",
+                "evidence": ["structure"]
+            }
+        ],
+        "checks": [
+            {"check": "manifest", "status": "ok"},
+            {"check": "history", "status": "ok"},
+            {
+                "check": "advisories",
+                "status": "unavailable",
+                "reason": "advisory service unreachable"
+            }
+        ]
+    },
+    "rubric": {
+        "start": 100,
+        "penalties": {
+            "no_test_configuration": 25,
+            "no_ci_workflow": 10,
+            "vulnerable_dependency": 30,
+            "abandoned_dependency": 5
+        },
+        "unavailable_checks": "listed, never counted as passed",
+        "tests_compare": ["evidence ids", "check statuses", "score"]
+    },
+    "capabilities": {
+        "file_tools": ["glob_path", "read_file", "grep_file_content"],
+        "narrow_tools": [
+            "read_composer_manifest",
+            "read_git_history",
+            "audit_composer_lock"
+        ],
+        "omitted": ["write_file", "edit_file", "delete_file", "bash"],
+        "scope": "an audit view of the validated target"
+    },
+    "policy": {
+        "untrusted": ["file contents", "commit messages"],
+        "never_copied": [".env*", "*.key", "*.pem", "auth.json"],
+        "excluded_trees": ["vendor", "node_modules", ".git"],
+        "max_file_bytes": 32768,
+        "max_files": 200,
+        "truncated_evidence": "labeled, never a complete inventory"
+    },
+    "outputs": {
+        "human": "a compact table on standard output",
+        "machine": "exactly one JSON document with --json",
+        "progress": "standard error"
+    }
+}
