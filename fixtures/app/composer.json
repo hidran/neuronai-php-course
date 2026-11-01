@@ -1,0 +1,22 @@
+{
+    "name": "acme/shop",
+    "description": "A Laravel style shop application.",
+    "type": "project",
+    "require": {
+        "php": "^8.3",
+        "guzzlehttp/psr7": "2.4.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "platform": {
+            "php": "8.3.0"
+        }
+    }
+}
