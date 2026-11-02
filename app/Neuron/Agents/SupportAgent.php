@@ -4,17 +4,18 @@ namespace App\Neuron\Agents;
 use NeuronAI\Agent\Agent;
 use NeuronAI\Agent\SystemPrompt;
 use NeuronAI\Chat\Messages\SystemMessage;
-use NeuronAI\Laravel\Facades\AIProvider;
 use NeuronAI\Providers\AIProviderInterface;
 use NeuronAI\Chat\History\MessageStoreInterface;
 use NeuronAI\Workflow\Persistence\PersistenceInterface;
 final class SupportAgent extends Agent
 {
     public function __construct(
+        AIProviderInterface $provider,
         private readonly MessageStoreInterface $conversations,
         private readonly PersistenceInterface $runs,
     ) {
         parent::__construct();
+        $this->setAiProvider($provider);
     }
     #[\Override]
     protected function messageStore(): MessageStoreInterface
@@ -30,11 +31,6 @@ final class SupportAgent extends Agent
     protected function contextWindow(): int
     {
         return config()->integer('support.context_window');
-    }
-    #[\Override]
-    protected function provider(): AIProviderInterface
-    {
-        return AIProvider::driver();
     }
     #[\Override]
     protected function instructions(): SystemMessage

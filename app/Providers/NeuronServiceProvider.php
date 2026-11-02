@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Providers;
 
@@ -10,11 +11,12 @@ use NeuronAI\Chat\History\MessageStoreInterface;
 use NeuronAI\Workflow\Persistence\DatabasePersistence;
 use NeuronAI\Workflow\Persistence\PersistenceInterface;
 
-class NeuronServiceProvider extends ServiceProvider
+final class NeuronServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
+    #[\Override]
     public function register(): void
     {
         $this->app->singleton(MessageStoreInterface::class, fn () =>

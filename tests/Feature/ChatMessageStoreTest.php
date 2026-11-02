@@ -9,6 +9,7 @@ use NeuronAI\Chat\History\EloquentMessageStore;
 use NeuronAI\Chat\Messages\AssistantMessage;
 use NeuronAI\Chat\Messages\Message;
 use NeuronAI\Chat\Messages\UserMessage;
+use NeuronAI\Providers\AIProviderInterface;
 use NeuronAI\Testing\FakeAIProvider;
 use Tests\TestCase;
 final class ChatMessageStoreTest extends TestCase
@@ -43,13 +44,13 @@ final class ChatMessageStoreTest extends TestCase
     {
         $thread = Conversation::factory()->create()->threadId();
         $first = new FakeAIProvider(new AssistantMessage('Noted.'));
+        $this->app->instance(AIProviderInterface::class, $first);
         $this->app->make(SupportAgent::class)
-            ->setAiProvider($first)
             ->for($thread)
             ->chat(new UserMessage('My order number is 4417.'));
         $second = new FakeAIProvider(new AssistantMessage('It is 4417.'));
+        $this->app->instance(AIProviderInterface::class, $second);
         $this->app->make(SupportAgent::class)
-            ->setAiProvider($second)
             ->for($thread)
             ->chat(new UserMessage('What was my order number?'));
         $sent = $this->texts($second->getRecorded()[0]->messages);

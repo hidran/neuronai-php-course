@@ -26,6 +26,7 @@ use NeuronAI\Chat\History\MessageStoreInterface;
 use NeuronAI\Chat\Messages\AssistantMessage;
 use NeuronAI\Chat\Messages\Message;
 use NeuronAI\Chat\Messages\UserMessage;
+use NeuronAI\Providers\AIProviderInterface;
 use NeuronAI\Testing\FakeAIProvider;
 $lab = realpath($argv[1] ?? '') ?: throw new RuntimeException('lab path');
 foreach ([
@@ -55,6 +56,9 @@ set_exception_handler(static function (Throwable $e): never {
 $app->register(NeuronServiceProvider::class);
 $app->instance('request', Request::create('/'));
 config(['support' => require __DIR__ . '/start/support.php']);
+// Every SupportAgent the container builds gets a fake provider (no keys, no
+// model call), as the store test does.
+$app->instance(AIProviderInterface::class, new FakeAIProvider());
 $fail = static fn (string $why) => throw new RuntimeException($why);
 // 1. What the narration says about the installed packages.
 $sdk = $lab . '/vendor/neuron-core/neuron-laravel';
@@ -134,33 +138,44 @@ $store->archive('demo-thread-a', 1);
 if ($store->loadActive('demo-thread-a') !== [] || count($store->loadAll('demo-thread-a')) !== 1) {
     $fail('archive did not separate active history from the transcript');
 }
-// 5. The agent: the hook's budget, and a fresh agent sends the stored question.
+// 5. The agent: the provider injected (no provider() hook), the hook's budget,
+//    and a fresh agent sends the stored question.
+$constructor = new ReflectionMethod(SupportAgent::class, '__construct');
+if ((string) ($constructor->getParameters()[0] ?? null)?->getType() !== AIProviderInterface::class
+    || new ReflectionMethod(SupportAgent::class, 'provider')->getDeclaringClass()->getName() === SupportAgent::class
+    || new ReflectionMethod(SupportAgent::class, 'contextWindow')->getAttributes(Override::class) === []) {
+    $fail('SupportAgent does not take the provider first, keeps provider() or lacks #[\\Override] on contextWindow()');
+}
 $budget = (new ReflectionMethod(SupportAgent::class, 'contextWindow'))->invoke(app(SupportAgent::class));
 if ($budget !== 32000 || app(MessageStoreInterface::class) !== app(MessageStoreInterface::class)) {
     $fail("contextWindow() returned {$budget}");
 }
 $thread = Conversation::factory()->create()->threadId();
-$ask = static function (Agent $agent, string $answer, string $question) use ($thread): FakeAIProvider {
+// $agent builds the agent once the fake is in place: a SupportAgent gets it from
+// the container, the old-style agent below (no constructor) through setAiProvider().
+$ask = static function (Closure $agent, string $answer, string $question) use ($app, $thread): FakeAIProvider {
     $fake = new FakeAIProvider(new AssistantMessage($answer));
-    $agent->setAiProvider($fake)->for($thread)->chat(new UserMessage($question));
+    $app->instance(AIProviderInterface::class, $fake);
+    $agent($fake)->for($thread)->chat(new UserMessage($question));
     return $fake;
 };
+$support = static fn (FakeAIProvider $fake): Agent => app(SupportAgent::class);
 $texts = fn (FakeAIProvider $f) => array_map(fn (Message $m) => $m->getContent(), $f->getRecorded()[0]->messages);
-$ask(app(SupportAgent::class), 'Noted.', 'My order number is 4417.');
-$second = $ask(app(SupportAgent::class), 'It is 4417.', 'What was my order number?');
+$ask($support, 'Noted.', 'My order number is 4417.');
+$second = $ask($support, 'It is 4417.', 'What was my order number?');
 if (!in_array('My order number is 4417.', $texts($second), true)) {
     $fail('a fresh agent did not send the stored question');
 }
 // 6. The pitfall of segment 7b: an old chatHistory() method is never called,
 //    so a fresh agent of that class starts from the default in-memory store.
-$old = static fn () => new class () extends Agent {
+$old = static fn (FakeAIProvider $fake): Agent => (new class () extends Agent {
     protected function chatHistory(): MessageStoreInterface
     {
         return app(MessageStoreInterface::class);
     }
-};
-$ask($old(), 'Noted.', 'My name is Ada.');
-if (in_array('My name is Ada.', $texts($ask($old(), 'Hello.', 'Who am I?')), true)) {
+})->setAiProvider($fake);
+$ask($old, 'Noted.', 'My name is Ada.');
+if (in_array('My name is Ada.', $texts($ask($old, 'Hello.', 'Who am I?')), true)) {
     $fail('a chatHistory() method reached the store: re-check segment 7b');
 }
 echo 'ELOQUENT MESSAGE STORE OK' . PHP_EOL;

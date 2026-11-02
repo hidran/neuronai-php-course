@@ -3,9 +3,9 @@ declare(strict_types=1);
 namespace Tests\Feature;
 use App\Models\Conversation;
 use App\Models\User;
-use App\Neuron\Agents\SupportAgent;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use NeuronAI\Chat\Messages\AssistantMessage;
+use NeuronAI\Providers\AIProviderInterface;
 use NeuronAI\Testing\FakeAIProvider;
 use Tests\TestCase;
 final class SupportConversationTest extends TestCase
@@ -16,9 +16,7 @@ final class SupportConversationTest extends TestCase
         $fake = new FakeAIProvider(
             new AssistantMessage('Our desk opens at nine.'),
         );
-        $agent = $this->app->make(SupportAgent::class);
-        $agent->setAiProvider($fake);
-        $this->app->instance(SupportAgent::class, $agent);
+        $this->app->instance(AIProviderInterface::class, $fake);
         $conversation = Conversation::factory()->create();
         $url = route('conversations.messages', $conversation);
         $this->actingAs($conversation->user)

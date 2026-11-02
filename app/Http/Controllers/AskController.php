@@ -1,13 +1,18 @@
 <?php
 declare(strict_types=1);
 namespace App\Http\Controllers;
+
 use App\Neuron\Agents\AssistantAgent;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\UniqueIdGenerator;
-final class AskController
+
+final class AskController extends Controller
 {
+    /**
+     * Handle the incoming request.
+     */
     public function __invoke(
         Request $request,
         AssistantAgent $agent,
