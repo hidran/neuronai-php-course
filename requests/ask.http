@@ -22,3 +22,12 @@ Content-Type: application/json
 {
   "message": 42
 }
+
+### A follow-up, sent as a new request
+POST http://127.0.0.1:8000/api/ask
+Accept: application/json
+Content-Type: application/json
+
+{
+  "message": "What did I just ask you?"
+}

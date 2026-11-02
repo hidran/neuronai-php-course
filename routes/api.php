@@ -8,4 +8,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/ask', AskController::class)->name('ask');
+Route::post('/ask', [AskController::class, '__invoke'])->name('ask');
