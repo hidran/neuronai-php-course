@@ -6,7 +6,7 @@ namespace App\Neuron\Agents\Tools;
 
 use NeuronAI\Tools\Tool;
 
-class OfficeHours extends Tool
+final class OfficeHours extends Tool
 {
     protected string $name = 'OfficeHours';
 
@@ -15,6 +15,7 @@ class OfficeHours extends Tool
     /**
      * Properties are the input arguments of the __invoke method.
      */
+    #[\Override]
     protected function properties(): array
     {
         return [];

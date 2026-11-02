@@ -4,7 +4,8 @@ declare(strict_types=1);
 // Usage: php verify-generators.php <lab>
 // <lab> is the Laravel lab at the end of the lesson: AssistantAgent, OfficeHours and
 // NormalizeQuestion generated with the SDK's Artisan commands, OfficeHours implemented and
-// NormalizeQuestion's imports repaired as in this folder's files.
+// NormalizeQuestion's imports repaired, both then final (OfficeHours::properties() with
+// #[\Override]) as in this folder's files.
 use App\Neuron\Agents\AssistantAgent;
 use App\Neuron\Agents\Tools\OfficeHours;
 use App\Neuron\Nodes\NormalizeQuestion;
@@ -94,6 +95,12 @@ if ($tool->getProperties() !== []) {
 }
 if ($tool() !== 'Monday to Friday, 9:00 to 17:00 CET.') {
     $fail('OfficeHours did not return the published hours');
+}
+// The course conventions on the two classes we keep (segment 5c): final, and the hook marked.
+$properties = new ReflectionMethod(OfficeHours::class, 'properties');
+if (!new ReflectionClass(OfficeHours::class)->isFinal() || !new ReflectionClass(NormalizeQuestion::class)->isFinal()
+    || $properties->getAttributes(Override::class) === []) {
+    $fail('OfficeHours and NormalizeQuestion must be final, OfficeHours::properties() #[\Override]');
 }
 // 6. The node: the generated imports fail validation, the repaired node runs in a bound workflow.
 $generated = (string) file_get_contents(__DIR__ . '/NormalizeQuestion.start.php');
