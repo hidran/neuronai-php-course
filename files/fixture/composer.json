@@ -1,0 +1,15 @@
+{
+    "name": "course/maestro-fixture",
+    "description": "A sanitized fixture for a read-only Maestro question",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "psr/log": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fixture\\": "src/"
+        }
+    }
+}
