@@ -120,5 +120,6 @@ Use PHP 8.5 or later. Setup commands and file locations are described in each le
 | Navigating the repository: FileSystemToolkit and a git log tool | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/14-02-auditor-files-and-git) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/14-02-auditor-files-and-git.zip) |
 | Composer audit, the structured report and streaming progress | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/14-03-auditor-report-streaming) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/14-03-auditor-report-streaming.zip) |
 | Version strategy: recognizing v3 code, upgrading to 4.x, following minor releases | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/15-01-version-strategy) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/15-01-version-strategy.zip) |
+| 15-02-ecosystem-maestro | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/15-02-ecosystem-maestro) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/15-02-ecosystem-maestro.zip) |
 
 The course is being produced continuously. This index lists available lesson sources.
