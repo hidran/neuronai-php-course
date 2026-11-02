@@ -16,11 +16,13 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ServiceProvider;
 use NeuronAI\Agent\Agent;
 use NeuronAI\Chat\History\EloquentMessageStore;
 use NeuronAI\Chat\History\MessageStoreInterface;
 use NeuronAI\Chat\Messages\AssistantMessage;
 use NeuronAI\Workflow\Persistence\DatabasePersistence;
+use NeuronAI\Providers\AIProviderInterface;
 use NeuronAI\Workflow\Persistence\PersistenceInterface;
 use NeuronAI\Workflow\Workflow;
 use NeuronAI\Testing\FakeAIProvider;
@@ -55,18 +57,28 @@ $app->instance('request', Request::create('/'));
 require __DIR__ . '/console.php';
 Artisan::call('migrate', ['--force' => true]);
 $fail = static fn (string $why) => throw new RuntimeException($why);
-// 1. The constructor: two promoted dependencies, named apart from the base
-//    properties, and the base hooks it overrides.
+// The fake answers every agent the container builds from here on: the
+// AIProviderInterface binding of AppServiceProvider is replaced, as the
+// feature test does (no keys, no model call).
+$answer = 'Our desk opens at nine.';
+$fake = new FakeAIProvider(new AssistantMessage($answer));
+$app->instance(AIProviderInterface::class, $fake);
+// 1. The constructor: the provider as a plain parameter, then two promoted
+//    dependencies named apart from the base properties; no provider() hook.
 $constructor = new ReflectionMethod(SupportAgent::class, '__construct');
 $params = array_map(
-    fn (ReflectionParameter $p) => [$p->getName(), (string) $p->getType()],
+    fn (ReflectionParameter $p) => [$p->getName(), (string) $p->getType(), $p->isPromoted()],
     $constructor->getParameters(),
 );
 if ($params !== [
-    ['conversations', MessageStoreInterface::class],
-    ['runs', PersistenceInterface::class],
+    ['provider', AIProviderInterface::class, false],
+    ['conversations', MessageStoreInterface::class, true],
+    ['runs', PersistenceInterface::class, true],
 ]) {
-    $fail('SupportAgent::__construct() is not (conversations, runs)');
+    $fail('SupportAgent::__construct() is not (provider, conversations, runs)');
+}
+if (!new ReflectionClass(SupportAgent::class)->isFinal()) {
+    $fail('SupportAgent is not final');
 }
 foreach (['messageStore' => Agent::class, 'persistence' => Workflow::class] as $prop => $base) {
     $declared = new ReflectionProperty(SupportAgent::class, $prop);
@@ -75,12 +87,24 @@ foreach (['messageStore' => Agent::class, 'persistence' => Workflow::class] as $
         $fail("SupportAgent redeclares \${$prop}");
     }
 }
-foreach (['messageStore', 'persistence', 'provider', 'instructions'] as $hook) {
+foreach (['messageStore', 'persistence', 'instructions'] as $hook) {
     $method = new ReflectionMethod(SupportAgent::class, $hook);
     if ($method->getDeclaringClass()->getName() !== SupportAgent::class
         || $method->getAttributes(Override::class) === []) {
         $fail("SupportAgent does not override {$hook}() with #[\\Override]");
     }
+}
+if (new ReflectionMethod(SupportAgent::class, 'provider')->getDeclaringClass()->getName() === SupportAgent::class) {
+    $fail('SupportAgent still overrides provider()');
+}
+// Our provider: final, strict types, #[\Override] on register() only (the
+// parent ServiceProvider has no boot() to override).
+$provider = new ReflectionClass(NeuronServiceProvider::class);
+if (!$provider->isFinal()
+    || new ReflectionMethod(NeuronServiceProvider::class, 'register')->getAttributes(Override::class) === []
+    || method_exists(ServiceProvider::class, 'boot')
+    || !str_contains((string) file_get_contents((string) $provider->getFileName()), 'declare(strict_types=1);')) {
+    $fail('NeuronServiceProvider is not final with strict types and #[\Override] on register()');
 }
 // 2. make() forwards its arguments: a workflow identifier no longer fits.
 try {
@@ -91,7 +115,8 @@ try {
         throw $e;
     }
 }
-// 3. Lifetimes: one shared store, a fresh persistence and a fresh agent.
+// 3. Lifetimes: one shared store, a fresh persistence and a fresh agent that
+//    holds the injected provider; for() returns a copy and leaves it unbound.
 $store = app(MessageStoreInterface::class);
 if (!$store instanceof EloquentMessageStore || $store !== app(MessageStoreInterface::class)) {
     $fail('MessageStoreInterface is not a shared EloquentMessageStore');
@@ -101,8 +126,16 @@ if (!$persistence instanceof DatabasePersistence
     || $persistence === app(PersistenceInterface::class)) {
     $fail('PersistenceInterface is not a fresh DatabasePersistence');
 }
-if (app(SupportAgent::class) === app(SupportAgent::class)) {
+$agent = app(SupportAgent::class);
+if ($agent === app(SupportAgent::class)) {
     $fail('SupportAgent is shared');
+}
+if ($agent->getProvider() !== $fake) {
+    $fail('the container did not inject the bound provider');
+}
+$copy = $agent->for('thread-1');
+if ($copy === $agent || $agent->getThreadId() !== null || $copy->getProvider() !== $fake) {
+    $fail('for() did not return a copy that shares the provider');
 }
 Artisan::call('agent:lifetimes');
 $lines = array_values(array_filter(array_map('trim', explode("\n", Artisan::output()))));
@@ -113,13 +146,8 @@ if ($lines !== [
 ]) {
     $fail('agent:lifetimes printed: ' . implode(' | ', $lines));
 }
-// 4. The action: the owner gets the fake answer through a for() copy, the
+// 4. The action: the owner gets the fake answer with one call, the
 //    conversation lands in chat_messages, a stranger is rejected before the agent.
-$answer = 'Our desk opens at nine.';
-$fake = new FakeAIProvider(new AssistantMessage($answer));
-$agent = app(SupportAgent::class);
-$agent->setAiProvider($fake);
-$app->instance(SupportAgent::class, $agent);
 $conversation = Conversation::factory()->create();
 $send = static function (User $user) use ($kernel, $conversation) {
     Auth::forgetGuards();
@@ -139,9 +167,6 @@ if ($response->getStatusCode() !== 200
     || json_decode((string) $response->getContent(), true) !== ['answer' => $answer]
     || $fake->getCallCount() !== 1) {
     $fail('the owner did not get the fake answer with one call: ' . $response->getStatusCode());
-}
-if ($agent->getThreadId() !== null) {
-    $fail('the registered agent was bound instead of copied');
 }
 $rows = ChatMessage::query()->where('thread_id', $conversation->threadId())->count();
 if ($rows !== 2) {
