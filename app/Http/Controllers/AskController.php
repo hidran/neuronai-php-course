@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use NeuronAI\Chat\Messages\UserMessage;
 use NeuronAI\UniqueIdGenerator;
 
-class AskController extends Controller
+final class AskController extends Controller
 {
     /**
      * Handle the incoming request.

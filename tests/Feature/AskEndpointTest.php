@@ -18,7 +18,7 @@ final class AskEndpointTest extends TestCase
         );
         $this->app->instance(
             AssistantAgent::class,
-            AssistantAgent::make()->setAiProvider($fake),
+            new AssistantAgent($fake),
         );
 
         $this->postJson('/api/ask', ['message' => 'When are you open?'])
@@ -33,7 +33,7 @@ final class AskEndpointTest extends TestCase
         $fake = new FakeAIProvider();
         $this->app->instance(
             AssistantAgent::class,
-            AssistantAgent::make()->setAiProvider($fake),
+            new AssistantAgent($fake),
         );
 
         $this->postJson('/api/ask', [])->assertUnprocessable();

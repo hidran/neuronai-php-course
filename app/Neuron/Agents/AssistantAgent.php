@@ -6,33 +6,24 @@ namespace App\Neuron\Agents;
 
 use NeuronAI\Agent\Agent;
 use NeuronAI\Agent\SystemPrompt;
-use NeuronAI\Laravel\Facades\AIProvider;
+use NeuronAI\Chat\Messages\SystemMessage;
 use NeuronAI\Providers\AIProviderInterface;
-use NeuronAI\Tools\ToolInterface;
-use NeuronAI\Tools\Toolkits\ToolkitInterface;
 
-class AssistantAgent extends Agent
+final class AssistantAgent extends Agent
 {
-    protected function provider(): AIProviderInterface
+    public function __construct(AIProviderInterface $provider)
     {
-        // return an instance of Anthropic, OpenAI, Gemini, Ollama, etc...
-        return AIProvider::driver();
+        parent::__construct();
+        $this->setAiProvider($provider);
     }
 
-    public function instructions(): string
+    #[\Override]
+    protected function instructions(): SystemMessage
     {
-        return (string) new SystemPrompt(
+        return new SystemMessage((string) new SystemPrompt(
             background: ['Support: Monday to Friday, 9:00 to 17:00 CET.'],
             steps: ['Answer questions about support hours.'],
             output: ['One or two short sentences.'],
-        );
-    }
-
-    /**
-     * @return ToolInterface[]|ToolkitInterface[]
-     */
-    protected function tools(): array
-    {
-        return [];
+        ));
     }
 }

@@ -3,15 +3,22 @@ declare(strict_types=1);
 // Offline check of "Lab: the first Laravel response" (FakeAIProvider: no model call, no keys).
 // Usage: php verify-first-endpoint.php <lab>
 // <lab> is the Laravel lab at the end of the lesson: install:api, routes/api.php, AskController,
-// AssistantAgent with the support instructions, requests/ask.http, tests/Feature/AskEndpointTest.php,
-// all equal to this folder's files. Requests go through Laravel's HTTP kernel, no server is started.
+// AssistantAgent converted to the course conventions with the support instructions, the provider
+// binding in AppServiceProvider, requests/ask.http, tests/Feature/AskEndpointTest.php, all equal to
+// this folder's files. Requests go through Laravel's HTTP kernel, no server is started.
+use App\Http\Controllers\AskController;
 use App\Neuron\Agents\AssistantAgent;
+use App\Providers\AppServiceProvider;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use NeuronAI\Chat\Messages\AssistantMessage;
 use NeuronAI\Chat\Messages\UserMessage;
+use NeuronAI\Observability\ObservabilityEvent;
+use NeuronAI\Providers\AIProviderInterface;
+use NeuronAI\Providers\Anthropic\Anthropic;
 use NeuronAI\Testing\FakeAIProvider;
+use NeuronAI\Workflow\Workflow;
 $lab = realpath($argv[1] ?? '') ?: throw new RuntimeException('usage: verify-first-endpoint.php <lab>');
 $fail = static function (string $what): never {
     throw new RuntimeException($what);
@@ -22,7 +29,8 @@ foreach ([
     'routes/api.php' => 'api.php',
     'bootstrap/app.php' => 'app.php',
     'app/Http/Controllers/AskController.php' => 'AskController.php',
-    'app/Neuron/Agents/AssistantAgent.php' => 'AssistantAgent.support.generated.php',
+    'app/Neuron/Agents/AssistantAgent.php' => 'AssistantAgent.php',
+    'app/Providers/AppServiceProvider.php' => 'AppServiceProvider.php',
     'requests/ask.http' => 'ask.http',
     'tests/Feature/AskEndpointTest.php' => 'AskEndpointTest.php',
 ] as $path => $file) {
@@ -43,24 +51,46 @@ if ($route === null || $route->uri() !== 'api/ask' || $route->methods() !== ['PO
 if ($route->getActionName() !== 'App\\Http\\Controllers\\AskController@__invoke') {
     $fail('the ask route does not call AskController::__invoke');
 }
-// 3. A recording agent behind the injected class: every request gets its own ask_ thread.
-final class RecordingAssistantAgent extends AssistantAgent
-{
-    /** @var list<string> */
-    public static array $threads = [];
-    #[\Override]
-    public function for(string $workflowId): static
-    {
-        self::$threads[] = $workflowId;
-        return parent::for($workflowId);
+// 3. The course conventions: final classes, the provider through the constructor, no provider()
+//    hook, instructions() a protected #[\Override] hook.
+foreach ([AssistantAgent::class, AskController::class, AppServiceProvider::class] as $class) {
+    if (!new ReflectionClass($class)->isFinal()) {
+        $fail("{$class} is not final");
     }
 }
+$constructor = new ReflectionMethod(AssistantAgent::class, '__construct');
+$instructions = new ReflectionMethod(AssistantAgent::class, 'instructions');
+if ($constructor->getNumberOfParameters() !== 1
+    || (string) $constructor->getParameters()[0]->getType() !== AIProviderInterface::class
+    || new ReflectionMethod(AssistantAgent::class, 'provider')->getDeclaringClass()->getName() === AssistantAgent::class
+    || !$instructions->isProtected() || $instructions->getAttributes(Override::class) === []
+    || new ReflectionMethod(AssistantAgent::class, 'tools')->getDeclaringClass()->getName() === AssistantAgent::class) {
+    $fail('AssistantAgent does not follow the course conventions');
+}
+// 4. The binding: the container builds the configured driver and hands it to the agent.
+config()->set('neuron.provider.default', 'anthropic');
+config()->set('neuron.provider.anthropic', ['key' => 'offline-check', 'model' => 'claude-offline', 'parameters' => []]);
+if (!$app->make(AIProviderInterface::class) instanceof Anthropic
+    || !$app->make(AssistantAgent::class)->getProvider() instanceof Anthropic) {
+    $fail('AIProviderInterface is not bound to the configured driver');
+}
+// 5. A fake provider behind the injected agent; every request records its own ask_ thread.
 $fake = new FakeAIProvider(
     new AssistantMessage('Support is open Monday to Friday, 9:00 to 17:00 CET.'),
     new AssistantMessage('This is the first message I have received from you.'),
     new AssistantMessage(''),
 );
-$app->instance(AssistantAgent::class, RecordingAssistantAgent::make()->setAiProvider($fake));
+$app->instance(AIProviderInterface::class, $fake);
+$threads = [];
+$app->afterResolving(AssistantAgent::class, static function (AssistantAgent $agent) use (&$threads): void {
+    $agent->subscribe(ObservabilityEvent::class, static function (ObservabilityEvent $event) use (&$threads): void {
+        $id = $event->execution?->workflowId
+            ?? ($event->source instanceof Workflow ? $event->source->getWorkflowId() : null);
+        if ($id !== null && !in_array($id, $threads, true)) {
+            $threads[] = $id;
+        }
+    });
+});
 $send = static function (array|string $body) use ($kernel): array {
     $json = is_string($body) ? $body : json_encode($body, JSON_THROW_ON_ERROR);
     $request = Request::create('/api/ask', 'POST', server: [
@@ -70,7 +100,7 @@ $send = static function (array|string $body) use ($kernel): array {
     $kernel->terminate($request, $response);
     return [$response->getStatusCode(), json_decode((string) $response->getContent(), true)];
 };
-// 4. The valid request: 200 and the agent's text under answer.
+// 6. The valid request: 200 and the agent's text under answer.
 [$status, $body] = $send(['message' => 'When is your support desk open?']);
 if ($status !== 200 || $body !== ['answer' => 'Support is open Monday to Friday, 9:00 to 17:00 CET.']) {
     $fail("valid request: {$status} " . json_encode($body));
@@ -80,7 +110,7 @@ $first = $fake->getRecorded()[0];
 if (!str_contains((string) $first->systemPrompt?->getContent(), 'Support: Monday to Friday, 9:00 to 17:00 CET.')) {
     $fail('the support instructions were not sent as the system prompt');
 }
-// 5. The invalid requests: 422, the field error, no model call.
+// 7. The invalid requests: 422, the field error, no model call.
 [$status, $body] = $send([]);
 if ($status !== 422 || ($body['errors']['message'][0] ?? '') !== 'The message field is required.') {
     $fail("missing message: {$status} " . json_encode($body));
@@ -93,23 +123,22 @@ if ($status !== 422 || ($body['errors']['message'][0] ?? '') !== 'The message fi
 if ($status !== 422 || $fake->getCallCount() !== 1) {
     $fail('an invalid request reached the model');
 }
-// 6. The follow-up is a new request: a new thread, and only its own question reaches the model.
+// 8. The follow-up is a new request: a new thread, and only its own question reaches the model.
 [$status, $body] = $send(['message' => 'What did I just ask you?']);
 $second = $fake->getRecorded()[1];
 $users = array_values(array_filter($second->messages, static fn ($m): bool => $m instanceof UserMessage));
 if ($status !== 200 || count($users) !== 1 || $users[0]->getContent() !== 'What did I just ask you?') {
     $fail('the follow-up carried earlier messages');
 }
-$threads = RecordingAssistantAgent::$threads;
 if (count($threads) !== 2 || $threads[0] === $threads[1] || !str_starts_with($threads[0], 'ask_') || !str_starts_with($threads[1], 'ask_')) {
     $fail('each request needs its own ask_ thread: ' . implode(', ', $threads));
 }
-// 7. No answer text: a deliberate 502 error, not an empty answer.
+// 9. No answer text: a deliberate 502 error, not an empty answer.
 [$status, $body] = $send(['message' => 'Anything?']);
 if ($status !== 502 || $body !== ['error' => 'The agent returned no answer.']) {
     $fail("empty answer: {$status} " . json_encode($body));
 }
-// 8. The lesson's feature test passes (its own process, with the human-readable output the lesson shows:
+// 10. The lesson's feature test passes (its own process, with the human-readable output the lesson shows:
 //    PAO_DISABLE keeps laravel/pao from switching to its JSON output when an AI agent runs this check).
 $proc = proc_open([PHP_BINARY, 'artisan', 'test', '--filter=AskEndpointTest', '--no-ansi'], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $lab, ['PAO_DISABLE' => '1'] + $baseEnv);
 $out = (string) preg_replace('/\e\[[0-9;]*m/', '', stream_get_contents($pipes[1]) . stream_get_contents($pipes[2]));

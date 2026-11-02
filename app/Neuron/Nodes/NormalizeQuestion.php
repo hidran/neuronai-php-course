@@ -9,7 +9,7 @@ use NeuronAI\Workflow\Events\StartEvent;
 use NeuronAI\Workflow\Events\StopEvent;
 use NeuronAI\Workflow\WorkflowState;
 
-class NormalizeQuestion extends Node
+final class NormalizeQuestion extends Node
 {
     /**
      * Implement the Node's logic
