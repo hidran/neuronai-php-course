@@ -1,0 +1,9 @@
+{
+  "enabledMcpjsonServers": ["neuron-docs"],
+  "permissions": {
+    "allow": [
+      "mcp__neuron-docs__searchDocumentation",
+      "mcp__neuron-docs__getPage"
+    ]
+  }
+}

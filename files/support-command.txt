@@ -1,0 +1,14 @@
+Task: a small support command, nothing else.
+Add examples/61-support-ask.php: it takes the question from argv[1],
+validates it with App\Support\SupportQuestion (1 to 500 characters),
+gets SupportAgent from the container in examples/services.php,
+binds a new server-chosen thread with for() and keeps that copy,
+sends a UserMessage and prints the answer text.
+Put that path in App\Support\SupportAsk; handle a missing message.
+Test: tests/SupportAskTest.php with FakeAIProvider: an empty question
+is rejected, the answer text is returned, one provider call is made.
+Before writing: read the neuron-agent and neuron-test skills, and
+check every unfamiliar method in vendor/neuron-core/neuron-ai/src.
+Allowed files: src/Support/SupportQuestion.php,
+src/Support/SupportAsk.php, examples/61-support-ask.php,
+tests/SupportAskTest.php. Change no other file. Run no command.

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "neuron-docs": {
+      "type": "http",
+      "url": "https://docs.neuron-ai.dev/~gitbook/mcp"
+    }
+  }
+}
