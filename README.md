@@ -117,6 +117,8 @@ Use PHP 8.5 or later. Setup commands and file locations are described in each le
 | Laravel Boost and AI-assisted development: reviewing the proposal | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/13-08-laravel-boost-skills) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/13-08-laravel-boost-skills.zip) |
 | Agents in the container | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/13-09-agents-in-container) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/13-09-agents-in-container.zip) |
 | EloquentMessageStore: the migration and model we write ourselves | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/13-10-eloquent-message-store) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/13-10-eloquent-message-store.zip) |
+| A support chat in the browser: the login, the conversation list and the stored transcript | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/13-11-support-chat-page) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/13-11-support-chat-page.zip) |
+| Sending a message from the page: the script, the two guards and the answer | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/13-12-chat-from-the-page) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/13-12-chat-from-the-page.zip) |
 | What we build and why: acceptance criteria | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/14-01-auditor-acceptance-criteria) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/14-01-auditor-acceptance-criteria.zip) |
 | Navigating the repository: FileSystemToolkit and a git log tool | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/14-02-auditor-files-and-git) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/14-02-auditor-files-and-git.zip) |
 | Composer audit, the structured report and streaming progress | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/14-03-auditor-report-streaming) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/14-03-auditor-report-streaming.zip) |
@@ -125,3 +127,16 @@ Use PHP 8.5 or later. Setup commands and file locations are described in each le
 | 15-03-ai-development-skills-mcp | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/15-03-ai-development-skills-mcp) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/15-03-ai-development-skills-mcp.zip) |
 
 The course is being produced continuously. This index lists available lesson sources.
+
+## The Neuron facade and NeuronAI 4
+
+With `neuron-core/neuron-laravel` 2.0.2 every call through the `Neuron` facade (`Neuron::chat()`, `stream()`, `structured()`) stops with "This agent has no thread ID: bind one with setThreadId() first." The agents of the course are classes resolved from the container and are not affected: only code that calls the facade directly is.
+
+A fix is proposed to the package. If your installed version still shows the error and you want to use the facade, install the package from the instructor's fork, which contains the fix:
+
+```bash
+composer config repositories.neuron-laravel vcs https://github.com/hidran/neuron-laravel
+composer require "neuron-core/neuron-laravel:dev-fix/facade-thread-id as 2.0.2"
+```
+
+When an official release includes the fix, go back to it with `composer config --unset repositories.neuron-laravel` and `composer require "neuron-core/neuron-laravel:^2.0"`.
