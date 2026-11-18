@@ -126,6 +126,7 @@ Use PHP 8.5 or later. Setup commands and file locations are described in each le
 | Version strategy: recognizing v3 code, upgrading to 4.x, following minor releases | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/15-01-version-strategy) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/15-01-version-strategy.zip) |
 | The ecosystem: Inspector, Maestro live, Neuron Hub, Studio and Symfony | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/15-02-ecosystem-maestro) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/15-02-ecosystem-maestro.zip) |
 | 15-03-ai-development-skills-mcp | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/15-03-ai-development-skills-mcp) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/15-03-ai-development-skills-mcp.zip) |
+| Closing: what we built | [Browse](https://github.com/hidran/neuronai-php-course/tree/lesson/15-04-closing-what-we-built) | [ZIP](https://github.com/hidran/neuronai-php-course/archive/refs/heads/lesson/15-04-closing-what-we-built.zip) |
 
 The course is being produced continuously. This index lists available lesson sources.
 
