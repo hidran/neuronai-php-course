@@ -1,0 +1,47 @@
+{
+    "advisories": {
+        "guzzlehttp/psr7": [
+            {
+                "advisoryId": "PKSA-jj5t-2zs1-dcfm",
+                "packageName": "guzzlehttp/psr7",
+                "affectedVersions": "<2.10.2",
+                "title": "Host confusion via authority reinterpretation",
+                "cve": "CVE-2026-48998",
+                "link": "https://github.com/guzzle/psr7/security/advisories/GHSA-34xg-wgjx-8xph",
+                "reportedAt": "2026-05-25T22:58:15+00:00",
+                "sources": [
+                    {
+                        "name": "GitHub",
+                        "remoteId": "GHSA-34xg-wgjx-8xph"
+                    },
+                    {
+                        "name": "FriendsOfPHP/security-advisories",
+                        "remoteId": "guzzlehttp/psr7/CVE-2026-48998.yaml"
+                    }
+                ],
+                "severity": "medium"
+            },
+            {
+                "advisoryId": "PKSA-hn62-zkx4-1y5q",
+                "packageName": "guzzlehttp/psr7",
+                "affectedVersions": ">=2,<2.4.5|<1.9.1",
+                "title": "Improper header validation",
+                "cve": "CVE-2023-29197",
+                "link": "https://github.com/guzzle/psr7/security/advisories/GHSA-wxmh-65f7-jcvw",
+                "reportedAt": "2023-04-17T16:00:37+00:00",
+                "sources": [
+                    {
+                        "name": "GitHub",
+                        "remoteId": "GHSA-wxmh-65f7-jcvw"
+                    },
+                    {
+                        "name": "FriendsOfPHP/security-advisories",
+                        "remoteId": "guzzlehttp/psr7/CVE-2023-29197.yaml"
+                    }
+                ],
+                "severity": null
+            }
+        ]
+    },
+    "abandoned": []
+}

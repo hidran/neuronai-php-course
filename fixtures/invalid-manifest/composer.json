@@ -1,0 +1,4 @@
+{
+    "name": "acme/broken",
+    "require": {
+        "php": "^8.3",
