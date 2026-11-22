@@ -1,0 +1,23 @@
+### Upload the exercise invoice to the Anthropic Files API (studio environment)
+# @name uploadExerciseInvoice
+# @no-cookie-jar
+POST https://api.anthropic.com/v1/files
+x-api-key: {{apiKey}}
+anthropic-version: 2023-06-01
+anthropic-beta: files-api-2025-04-14
+Content-Type: multipart/form-data; boundary=lessonBoundary
+
+--lessonBoundary
+Content-Disposition: form-data; name="file"; filename="exercise-invoice.pdf"
+Content-Type: application/pdf
+
+< ../fixtures/sources/exercise-invoice.pdf
+--lessonBoundary--
+
+> {%
+client.test("Exercise invoice uploaded", function () {
+    client.assert(response.status === 200, "Upload failed");
+    client.assert(response.body.id.startsWith("file_"), "No file ID");
+});
+%}
+>>! ../storage/exercise-upload.json
