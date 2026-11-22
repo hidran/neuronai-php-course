@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": ">=8.5",
-        "html2text/html2text": "^4.3",
+        "html2text/html2text": "^2.0",
         "inspector-apm/inspector-php": "^3.19",
         "neuron-core/neuron-ai": "^4.1",
         "psr/log": "^3.0",
