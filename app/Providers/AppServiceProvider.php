@@ -6,7 +6,10 @@ namespace App\Providers;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Inspector\Neuron\V4\InspectorSubscriber;
+use NeuronAI\Agent\Agent;
 use NeuronAI\Laravel\AIProviderManager;
+use NeuronAI\Observability\ObservabilityEvent;
 use NeuronAI\Providers\AIProviderInterface;
 
 final class AppServiceProvider extends ServiceProvider
@@ -19,6 +22,13 @@ final class AppServiceProvider extends ServiceProvider
             fn (Application $app) => $app
                 ->make(AIProviderManager::class)
                 ->driver(),
+        );
+        $this->app->afterResolving(
+            Agent::class,
+            fn (Agent $agent) => $agent->subscribe(
+                ObservabilityEvent::class,
+                new InspectorSubscriber(inspector()),
+            ),
         );
     }
 }
