@@ -1,8 +1,8 @@
-# Filter and trust MCP tools
+# Filter and trust MCP tools, part 2
 
-Source code of the lesson "Filter and trust MCP tools" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Filter and trust MCP tools, part 2" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Connect to an MCP server over HTTP, part 2": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Filter and trust MCP tools": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,22 +17,9 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/48-mcp-policy.php`
-- `examples/exercise-mcp-policy.php`
-- `examples/verify-mcp-policy.php`
-- `servers/policy-tools.php`
-- `src/Agents/PolicyAgent.php`
-- `src/Mcp/FramedMcpTool.php`
-- `src/Mcp/McpPolicy.php`
-- `src/Mcp/PolicyFixture.php`
+- `composer.json`
+- `exercises/09-03b-mcp-filtering-security.md`
 
-## Run
+## Exercise
 
-- `php examples/48-mcp-policy.php`
-- `php examples/exercise-mcp-policy.php`
-
-## Offline check
-
-No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
-
-- `php examples/verify-mcp-policy.php`
+See `exercises/09-03b-mcp-filtering-security.md`.
