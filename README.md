@@ -1,8 +1,8 @@
-# Our first tool: watching the agent loop happen
+# Anatomy of a model call: the messages, the tool schema and the usage of our run
 
-Source code of the lesson "Our first tool: watching the agent loop happen" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Anatomy of a model call: the messages, the tool schema and the usage of our run" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "The autonomy ladder: our hello world is rung 1, who decides what happens next": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Our first tool: watching the agent loop happen": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,17 +17,8 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/02-first-tool.php`
-- `examples/verify-first-tool.php`
-- `src/HelloAgent.php`
-- `src/PackageVersionTool.php`
+- `examples/03-anatomy.php`
 
 ## Run
 
-- `php examples/02-first-tool.php`
-
-## Offline check
-
-No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
-
-- `php examples/verify-first-tool.php`
+- `php examples/03-anatomy.php`
