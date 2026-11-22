@@ -1,8 +1,8 @@
-# Tools as classes, with dependencies, part 2
+# Tool descriptions are prompt engineering: an A/B experiment
 
-Source code of the lesson "Tools as classes, with dependencies, part 2" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Tool descriptions are prompt engineering: an A/B experiment" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Tools as classes, with dependencies": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Tools as classes, with dependencies, part 2": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -15,8 +15,10 @@ cp .env.example .env
 
 Put your own provider keys in `.env` and choose the provider with `NEURON_PROVIDER`. `.env` is never committed.
 
-## Offline check
+## What this lesson changes
 
-No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
+- `examples/21-description-ab.php`
 
-- `php examples/verify-count-tool.php`
+## Run
+
+- `php examples/21-description-ab.php`
