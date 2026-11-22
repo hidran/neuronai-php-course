@@ -5,7 +5,7 @@ reach the support team.
 
 ## Damaged item returns
 
-Return window: 17 days after delivery.
+Return window: 19 days after delivery.
 A photo that shows the damage is required with the request.
 Requests without a photo cannot be approved.
 
