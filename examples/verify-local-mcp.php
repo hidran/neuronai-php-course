@@ -1,6 +1,10 @@
 <?php
 
 declare(strict_types=1);
+// Offline check of part two (FakeAIProvider, no key): discovery through the real fixture over stdio, one cached
+// connector, a direct invocation, the agent's flat tool list and a stream whose tool call reaches the server.
+// Self-contained: every class it loads and the fixture are copies in this folder; the lab gives only vendor/.
+// Usage: php verify-local-mcp.php <lab>
 $lab = $argv[1] ?? dirname(__DIR__);
 require $lab . '/vendor/autoload.php';
 // PackageVersionTool.php autoloads from src/PackageVersionTool.php

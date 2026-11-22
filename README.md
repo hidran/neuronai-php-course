@@ -1,8 +1,8 @@
-# Connect a local tool server with MCP
+# Connect a local tool server with MCP, part 2
 
-Source code of the lesson "Connect a local tool server with MCP" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Connect a local tool server with MCP, part 2" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Building an invoice extractor, part 2": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Connect a local tool server with MCP": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,20 +17,15 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/46-local-mcp.php`
-- `examples/exercise-local-mcp.php`
 - `examples/verify-local-mcp.php`
-- `servers/office-hours.php`
-- `src/Agents/OfficeHoursAgent.php`
-- `src/Mcp/McpConnection.php`
-
-## Run
-
-- `php examples/46-local-mcp.php`
-- `php examples/exercise-local-mcp.php`
+- `exercises/09-01b-mcp-local-server.md`
 
 ## Offline check
 
 No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
 
 - `php examples/verify-local-mcp.php`
+
+## Exercise
+
+See `exercises/09-01b-mcp-local-server.md`.
