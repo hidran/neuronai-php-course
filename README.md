@@ -1,8 +1,8 @@
-# Message stores and the thread ID
+# Message stores and the thread ID, part 2
 
-Source code of the lesson "Message stores and the thread ID" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Message stores and the thread ID, part 2" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "The model has no memory: two calls": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Message stores and the thread ID": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,12 +17,8 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `database/chat_messages.sql`
 - `examples/16-message-stores.php`
-- `examples/verify-stores.php`
-- `src/Config/StorageSettings.php`
-- `src/Support/Database.php`
-- `src/Support/MessageStoreFactory.php`
+- `exercises/04-03b-message-stores.md`
 
 ## Run
 
@@ -33,3 +29,7 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
 
 - `php examples/verify-stores.php`
+
+## Exercise
+
+See `exercises/04-03b-message-stores.md`.
