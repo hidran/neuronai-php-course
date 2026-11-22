@@ -1,8 +1,8 @@
-# Configuration and environments
+# Artisan generators
 
-Source code of the lesson "Configuration and environments" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Artisan generators" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "A Laravel 13 project in PhpStorm, and installing the SDK": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Configuration and environments": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -19,11 +19,11 @@ Put your own provider key in `.env` (never commit it). The tests run without any
 
 ## What this lesson changes
 
-- `.env.example`
-- `config/neuron.php`
-- `exercises/13-02-configuration-environments.md`
-- `routes/console.php`
+- `app/Neuron/Agents/AssistantAgent.php`
+- `app/Neuron/Agents/Tools/OfficeHours.php`
+- `app/Neuron/Nodes/NormalizeQuestion.php`
+- `exercises/13-03-artisan-generators.md`
 
 ## Exercise
 
-See `exercises/13-02-configuration-environments.md`.
+See `exercises/13-03-artisan-generators.md`.
