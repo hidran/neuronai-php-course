@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-$lab = $argv[1] ?? dirname(__DIR__);
 // Reference solution of the exercise, offline: php exercise-gate.php <repo-auditor project>
 $project = $argv[1] ?? throw new RuntimeException('project path');
 require $project . '/vendor/autoload.php';
