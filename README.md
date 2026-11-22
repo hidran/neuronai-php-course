@@ -1,6 +1,6 @@
 # Agentic AI in PHP with NeuronAI
 
-Source code and exercises for the English course. Choose a lesson to browse its source or download its ZIP. Each branch preserves that lesson's files.
+Source code and exercises for the English course. Each lesson has a branch: it is the course project as it stands at the end of that lesson, ready to run, and its last commit adds only what that lesson changed. The plain PHP project grows from the setup lessons to the RAG section and the version lessons, the Laravel application through its section, and the repository auditor through the capstone.
 
 Use PHP 8.5 or later. Setup commands and file locations are described in each lesson README. Supply your own provider keys locally; credentials are never included.
 
