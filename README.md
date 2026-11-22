@@ -1,8 +1,8 @@
-# Lab: weather and calculator agent, part 2
+# A read-only database analyst
 
-Source code of the lesson "Lab: weather and calculator agent, part 2" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "A read-only database analyst" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Lab: weather and calculator agent": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Lab: weather and calculator agent, part 2": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,14 +17,14 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `exercises/05-12b-lab-weather-calculator.md`
+- `database/compose.analyst.yaml`
+- `database/exercise-answer.sql`
+- `database/inspect.sql`
+- `database/seed.sql`
+- `examples/31-database-analyst.php`
+- `examples/runtime-check-analyst.php`
+- `src/Agents/DataAnalystAgent.php`
 
-## Offline check
+## Run
 
-No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
-
-- `php examples/verify-weather.php`
-
-## Exercise
-
-See `exercises/05-12b-lab-weather-calculator.md`.
+- `php examples/31-database-analyst.php`
