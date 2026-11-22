@@ -1,8 +1,8 @@
-# Streaming and its chunks
+# Streaming from the command line
 
-Source code of the lesson "Streaming and its chunks" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Streaming from the command line" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Lab: extracting orders from emails, part 2": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Streaming and its chunks": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,23 +17,15 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/39-stream-chunks.php`
-- `examples/exercise-stream-boundaries.php`
-- `examples/verify-stream.php`
-- `exercises/07-01-stream-chunks.md`
-- `src/Agents/StreamingAgent.php`
+- `examples/40-streaming-cli.php`
+- `examples/exercise-streaming-cli.php`
+- `exercises/07-02-streaming-cli.md`
 
 ## Run
 
-- `php examples/39-stream-chunks.php`
-- `php examples/exercise-stream-boundaries.php`
-
-## Offline check
-
-No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
-
-- `php examples/verify-stream.php`
+- `php examples/40-streaming-cli.php`
+- `php examples/exercise-streaming-cli.php`
 
 ## Exercise
 
-See `exercises/07-01-stream-chunks.md`.
+See `exercises/07-02-streaming-cli.md`.
