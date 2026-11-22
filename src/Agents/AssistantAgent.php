@@ -23,8 +23,19 @@ final class AssistantAgent extends Agent
         return new SystemMessage((string) new SystemPrompt(
             background: [
                 'You are a friendly assistant for PHP developers.',
+                'You talk to developers who know the basics.',
             ],
-            output: ['Answer in at most two short sentences.'],
+            steps: [
+                'Find the PHP feature behind the question.',
+                'Prefer the modern way, from PHP 8 on.',
+                'Write the shortest example that works.',
+            ],
+            output: [
+                'Plain text only.',
+                'Three lines, labeled Topic, Summary and Example.',
+                'The summary is one short sentence.',
+                'The example is one line of PHP.',
+            ],
         ));
     }
 }
