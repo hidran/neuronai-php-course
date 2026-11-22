@@ -11,7 +11,7 @@ use NeuronAI\Chat\Messages\UserMessage;
 
 $settings = require __DIR__ . '/bootstrap.php';
 $provider = new ProviderFactory($settings)->create();
-$view = new StreamProgress(diagnostic: true);
+$view = new StreamProgress(diagnostic: false);
 $stream = ServerAgent::make($provider)->setThreadId('server-fixture')
     ->stream(new UserMessage('What is the training server address?'));
 $state = new ToolStreamConsumer($view)->consume($stream);
