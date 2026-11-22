@@ -1,8 +1,8 @@
-# Measuring multimodal cost
+# Building an invoice extractor
 
-Source code of the lesson "Measuring multimodal cost" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Building an invoice extractor" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Source types and file identifiers": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Measuring multimodal cost": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,27 +17,34 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/44-multimodal-cost.php`
-- `examples/exercise-multimodal-cost.php`
-- `exercises/08-03-multimodal-cost-design.md`
-- `fixtures/multimodal-cost/build-fixtures.py`
-- `fixtures/multimodal-cost/full.png`
-- `fixtures/multimodal-cost/manifest.json`
-- `fixtures/multimodal-cost/medium.png`
-- `fixtures/multimodal-cost/tiny.png`
-- `src/Media/BenchmarkReport.php`
-- `src/Media/BenchmarkRow.php`
-- `src/Media/BenchmarkRunner.php`
-- `src/Media/CostProbe.php`
-- `src/Media/FixtureSet.php`
-- `src/Media/ImageCase.php`
-- `src/Media/Measurement.php`
+- `examples/45-invoice-extractor.php`
+- `examples/exercise-invoice-extractor.php`
+- `fixtures/invoices/alternate.pdf`
+- `fixtures/invoices/alternate.png`
+- `fixtures/invoices/build-fixtures.py`
+- `fixtures/invoices/exercise.pdf`
+- `fixtures/invoices/exercise.png`
+- `fixtures/invoices/inconsistent.pdf`
+- `fixtures/invoices/inconsistent.png`
+- `fixtures/invoices/invoice-full.png`
+- `fixtures/invoices/invoice-small.png`
+- `fixtures/invoices/manifest.json`
+- `fixtures/invoices/normal.pdf`
+- `fixtures/invoices/normal.png`
+- `fixtures/invoices/tax-exempt.pdf`
+- `fixtures/invoices/tax-exempt.png`
+- `src/Agents/InvoiceAgent.php`
+- `src/Invoices/Currency.php`
+- `src/Invoices/Invoice.php`
+- `src/Invoices/InvoiceConsistency.php`
+- `src/Invoices/InvoiceLine.php`
+- `src/Invoices/InvoiceMessageFactory.php`
+- `src/Invoices/InvoiceOracle.php`
+- `src/Invoices/InvoiceReport.php`
+- `src/Invoices/InvoiceRunner.php`
+- `src/Invoices/InvoiceSource.php`
 
 ## Run
 
-- `php examples/44-multimodal-cost.php`
-- `php examples/exercise-multimodal-cost.php`
-
-## Exercise
-
-See `exercises/08-03-multimodal-cost-design.md`.
+- `php examples/45-invoice-extractor.php`
+- `php examples/exercise-invoice-extractor.php`
