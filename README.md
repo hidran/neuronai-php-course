@@ -1,8 +1,8 @@
-# Reading an agent trace, part 1
+# Reading an agent trace, part 2
 
-Source code of the lesson "Reading an agent trace, part 1" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Reading an agent trace, part 2" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Observe agent runs with Inspector, part 2": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Reading an agent trace, part 1": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,20 +17,15 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/50-reading-traces.php`
-- `examples/exercise-reading-traces.php`
-- `examples/verify-traces.php`
-- `src/Observability/Prices.php`
-- `src/Observability/TraceRecorder.php`
-- `src/Observability/TraceReport.php`
-
-## Run
-
-- `php examples/50-reading-traces.php`
-- `php examples/exercise-reading-traces.php`
+- `composer.json`
+- `exercises/10-02b-reading-traces.md`
 
 ## Offline check
 
 No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
 
 - `php examples/verify-traces.php`
+
+## Exercise
+
+See `exercises/10-02b-reading-traces.md`.

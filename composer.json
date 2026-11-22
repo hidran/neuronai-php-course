@@ -15,6 +15,11 @@
             "App\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Evaluators\\": "evaluators/"
+        }
+    },
     "config": {
         "sort-packages": true
     }
