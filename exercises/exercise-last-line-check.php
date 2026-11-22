@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-$lab = $argv[1] ?? dirname(__DIR__);
 // Check of the exercise "the last line of each conversation in the list".
 // Usage: php exercise-last-line-check.php <your project>
 // It runs the project's OWN seeders, classes, routes and views (nothing of

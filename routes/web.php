@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\ConversationMessageController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/conversations/{conversation}', 'show')
                 ->name('conversations.show');
         });
+    Route::post(
+        '/conversations/{conversation}/messages',
+        ConversationMessageController::class,
+    )->name('conversations.messages.web');
 });

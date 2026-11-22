@@ -52,6 +52,10 @@
         .transcript .assistant::before { content: "Support"; }
         .list .empty, .transcript .empty { color: #52606d;
             background: none; border: 0; padding-left: 0; }
+        button:disabled { background: #7b8794; cursor: wait; }
+        .transcript .thinking { color: #52606d; font-style: italic; }
+        .transcript .not-sent { background: #52606d; }
+        .transcript .not-sent::before { content: "You, not sent"; }
     </style>
 </head>
 <body>
