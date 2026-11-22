@@ -1,8 +1,8 @@
-# Lab: persistent CLI chat with /reset, part 2
+# What the model sees: name, description and JSON schema of our tool
 
-Source code of the lesson "Lab: persistent CLI chat with /reset, part 2" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "What the model sees: name, description and JSON schema of our tool" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Lab: a persistent CLI chat with /reset": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Lab: persistent CLI chat with /reset, part 2": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,13 +17,8 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `assistant.php`
-- `exercises/04-06b-lab-persistent-chat.md`
+- `examples/19-what-the-model-sees.php`
 
 ## Run
 
-- `php assistant.php`
-
-## Exercise
-
-See `exercises/04-06b-lab-persistent-chat.md`.
+- `php examples/19-what-the-model-sees.php`
