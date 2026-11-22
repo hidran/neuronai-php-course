@@ -1,8 +1,8 @@
-# Lab: extracting orders from emails, part 2
+# Streaming and its chunks
 
-Source code of the lesson "Lab: extracting orders from emails, part 2" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Streaming and its chunks" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Lab: extracting orders from emails": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Lab: extracting orders from emails, part 2": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,14 +17,23 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `exercises/06-07b-lab-order-extraction.md`
+- `examples/39-stream-chunks.php`
+- `examples/exercise-stream-boundaries.php`
+- `examples/verify-stream.php`
+- `exercises/07-01-stream-chunks.md`
+- `src/Agents/StreamingAgent.php`
+
+## Run
+
+- `php examples/39-stream-chunks.php`
+- `php examples/exercise-stream-boundaries.php`
 
 ## Offline check
 
 No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
 
-- `php examples/verify-order.php`
+- `php examples/verify-stream.php`
 
 ## Exercise
 
-See `exercises/06-07b-lab-order-extraction.md`.
+See `exercises/07-01-stream-chunks.md`.
