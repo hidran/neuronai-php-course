@@ -1,8 +1,8 @@
-# Source types and file identifiers
+# Measuring multimodal cost
 
-Source code of the lesson "Source types and file identifiers" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Measuring multimodal cost" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Images and documents as content blocks": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Source types and file identifiers": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,30 +17,27 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/43-source-types.php`
-- `examples/configure-http-client.php`
-- `examples/exercise-source-references.php`
-- `examples/verify-sources.php`
-- `exercises/08-02-source-types-file-id.md`
-- `fixtures/sources/exercise-invoice.pdf`
-- `fixtures/sources/invoice.pdf`
-- `requests/upload-exercise-invoice.http`
-- `requests/upload-invoice.http`
-- `src/Agents/SourceAgent.php`
-- `src/Http/FilesApiClient.php`
-- `src/SourceExamples.php`
+- `examples/44-multimodal-cost.php`
+- `examples/exercise-multimodal-cost.php`
+- `exercises/08-03-multimodal-cost-design.md`
+- `fixtures/multimodal-cost/build-fixtures.py`
+- `fixtures/multimodal-cost/full.png`
+- `fixtures/multimodal-cost/manifest.json`
+- `fixtures/multimodal-cost/medium.png`
+- `fixtures/multimodal-cost/tiny.png`
+- `src/Media/BenchmarkReport.php`
+- `src/Media/BenchmarkRow.php`
+- `src/Media/BenchmarkRunner.php`
+- `src/Media/CostProbe.php`
+- `src/Media/FixtureSet.php`
+- `src/Media/ImageCase.php`
+- `src/Media/Measurement.php`
 
 ## Run
 
-- `php examples/43-source-types.php`
-- `php examples/exercise-source-references.php`
-
-## Offline check
-
-No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
-
-- `php examples/verify-sources.php`
+- `php examples/44-multimodal-cost.php`
+- `php examples/exercise-multimodal-cost.php`
 
 ## Exercise
 
-See `exercises/08-02-source-types-file-id.md`.
+See `exercises/08-03-multimodal-cost-design.md`.
