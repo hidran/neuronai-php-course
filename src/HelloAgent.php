@@ -25,4 +25,10 @@ final class HelloAgent extends Agent
             output: ['Answer in at most two short sentences.'],
         ));
     }
+
+    #[\Override]
+    protected function tools(): array
+    {
+        return [new PackageVersionTool()];
+    }
 }
