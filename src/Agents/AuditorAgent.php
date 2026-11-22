@@ -7,6 +7,7 @@ namespace App\Agents;
 use App\Evidence\AuditView;
 use App\Evidence\EvidenceLog;
 use App\Target;
+use App\Tools\ComposerAuditTool;
 use App\Tools\ComposerManifestTool;
 use App\Tools\GitHistoryTool;
 use NeuronAI\Agent\Agent;
@@ -46,6 +47,7 @@ final class AuditorAgent extends Agent
             steps: [
                 'Call read_composer_manifest once.',
                 'Call read_git_history once with days set to 90.',
+                'Call audit_composer_lock once.',
                 'Use glob_path with pattern ** to list the files, '
                     . 'then read the test and CI configuration.',
             ],
@@ -69,6 +71,8 @@ final class AuditorAgent extends Agent
                 ->setMaxRuns(1),
             GitHistoryTool::make($this->target->path, $this->log)
                 ->setMaxRuns(3),
+            ComposerAuditTool::make($this->target->path, $this->log)
+                ->setMaxRuns(1),
         ];
     }
 
