@@ -12,6 +12,7 @@ final readonly class MonitoringSettings
     {
     }
 
+    /** @param array<string, mixed> $env */
     public static function fromEnv(array $env): self
     {
         $key = $env['INSPECTOR_INGESTION_KEY'] ?? '';
