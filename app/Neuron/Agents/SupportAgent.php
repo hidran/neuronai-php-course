@@ -35,6 +35,12 @@ final class SupportAgent extends Agent
     }
 
     #[\Override]
+    protected function contextWindow(): int
+    {
+        return config()->integer('support.context_window');
+    }
+
+    #[\Override]
     protected function instructions(): SystemMessage
     {
         return new SystemMessage((string) new SystemPrompt(

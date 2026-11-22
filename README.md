@@ -1,8 +1,8 @@
-# Agents in the container
+# EloquentMessageStore: the migration and model we write ourselves
 
-Source code of the lesson "Agents in the container" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "EloquentMessageStore: the migration and model we write ourselves" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Laravel Boost and AI-assisted development: reviewing the proposal": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Agents in the container": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -19,29 +19,11 @@ Put your own provider key in `.env` (never commit it). The tests run without any
 
 ## What this lesson changes
 
-- `app/Http/Controllers/ConversationMessageController.php`
-- `app/Models/ChatMessage.php`
-- `app/Models/Conversation.php`
 - `app/Neuron/Agents/SupportAgent.php`
-- `app/Policies/ConversationPolicy.php`
-- `app/Providers/NeuronServiceProvider.php`
-- `bootstrap/providers.php`
-- `checks/verify-agents-in-container.php`
-- `database/factories/ConversationFactory.php`
-- `database/migrations/2026_11_01_000100_create_conversations_table.php`
-- `database/migrations/2026_11_01_000200_create_chat_messages_table.php`
-- `exercises/13-09-agents-in-container.md`
-- `routes/api.php`
-- `routes/console.php`
-- `tests/Feature/SupportConversationTest.php`
-- `tests/Unit/SupportAgentTest.php`
-
-## Offline check
-
-No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
-
-- `php checks/verify-agents-in-container.php`
+- `config/support.php`
+- `exercises/13-10-eloquent-message-store.md`
+- `tests/Feature/ChatMessageStoreTest.php`
 
 ## Exercise
 
-See `exercises/13-09-agents-in-container.md`.
+See `exercises/13-10-eloquent-message-store.md`.
