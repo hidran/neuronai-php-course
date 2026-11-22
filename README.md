@@ -1,8 +1,8 @@
-# Requesting structured output
+# Nested objects and typed arrays
 
-Source code of the lesson "Requesting structured output" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Nested objects and typed arrays" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Defining the output class": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Requesting structured output": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,23 +17,25 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/34-request-structured.php`
-- `examples/exercise-request-structured.php`
-- `examples/verify-extractor.php`
-- `exercises/06-03-requesting-structured-output.md`
-- `src/Agents/PersonExtractor.php`
+- `examples/35-nested-objects.php`
+- `examples/exercise-nested-objects.php`
+- `examples/verify-nested.php`
+- `exercises/06-04-nested-objects.md`
+- `src/Output/Address.php`
+- `src/Output/Delivery.php`
+- `src/Output/Tag.php`
 
 ## Run
 
-- `php examples/34-request-structured.php`
-- `php examples/exercise-request-structured.php`
+- `php examples/35-nested-objects.php`
+- `php examples/exercise-nested-objects.php`
 
 ## Offline check
 
 No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
 
-- `php examples/verify-extractor.php`
+- `php examples/verify-nested.php`
 
 ## Exercise
 
-See `exercises/06-03-requesting-structured-output.md`.
+See `exercises/06-04-nested-objects.md`.
