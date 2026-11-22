@@ -1,8 +1,8 @@
-# Session memory vs long-term memory
+# Lab: a persistent CLI chat with /reset
 
-Source code of the lesson "Session memory vs long-term memory" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Lab: a persistent CLI chat with /reset" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Context window and trimming": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Session memory vs long-term memory": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,16 +17,4 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/18-long-term-memory.php`
-- `examples/verify-facts.php`
-- `src/Support/FactStore.php`
-
-## Run
-
-- `php examples/18-long-term-memory.php`
-
-## Offline check
-
-No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
-
-- `php examples/verify-facts.php`
+- `examples/assistant.php`
