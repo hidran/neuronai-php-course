@@ -1,8 +1,8 @@
-# Evals: PHPUnit for non-deterministic systems
+# Evaluating non deterministic answers, part 2
 
-Source code of the lesson "Evals: PHPUnit for non-deterministic systems" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Evaluating non deterministic answers, part 2" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Reading an agent trace, part 2": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Evals: PHPUnit for non-deterministic systems": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,22 +17,21 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `evaluation.php`
-- `evaluators/Suite/TeachingEvaluator.php`
-- `evaluators/Suite/WeatherEvaluator.php`
-- `evaluators/TeachingCases.php`
+- `composer.json`
 - `examples/51-evaluation.php`
-- `examples/exercise-evaluation.php`
 - `examples/verify-evaluation.php`
-- `src/Agents/TeachingAgent.php`
+- `exercises/10-03b-evaluation-basics.md`
 
 ## Run
 
 - `php examples/51-evaluation.php`
-- `php examples/exercise-evaluation.php`
 
 ## Offline check
 
 No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
 
 - `php examples/verify-evaluation.php`
+
+## Exercise
+
+See `exercises/10-03b-evaluation-basics.md`.

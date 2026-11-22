@@ -3,13 +3,11 @@
 declare(strict_types=1);
 $lab = $argv[1] ?? dirname(__DIR__);
 require $lab . '/vendor/autoload.php';
-// Provider.php autoloads from src/Config/Provider.php
-// Settings.php autoloads from src/Config/Settings.php
-// ProviderFactory.php autoloads from src/Config/ProviderFactory.php
-// FixtureWeatherTool.php autoloads from src/Tools/FixtureWeatherTool.php
-// ObservedWeatherAgent.php autoloads from src/Agents/ObservedWeatherAgent.php
-foreach (['TeachingAgent', 'TeachingCases', 'TeachingEvaluator',
-    'WeatherEvaluator'] as $class) {
+// Self-contained: every class it loads is copied into this folder
+// (prepare.sh compares the copies with their sources byte for byte).
+foreach (['Provider', 'Settings', 'ProviderFactory', 'FixtureWeatherTool',
+    'ObservedWeatherAgent', 'TeachingAgent', 'TeachingCases',
+    'TeachingEvaluator', 'WeatherEvaluator'] as $class) {
     // the classes autoload
 }
 
