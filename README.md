@@ -125,13 +125,6 @@ The course is being produced continuously. This index lists available lesson sou
 
 ## The Neuron facade and NeuronAI 4
 
-With `neuron-core/neuron-laravel` 2.0.2 every call through the `Neuron` facade (`Neuron::chat()`, `stream()`, `structured()`) stops with "This agent has no thread ID: bind one with setThreadId() first." The agents of the course are classes resolved from the container and are not affected: only code that calls the facade directly is.
+`neuron-core/neuron-laravel` 2.0.3 fixes the `Neuron` facade on NeuronAI 4: `Neuron::chat()`, `stream()` and `structured()` give each call its own thread. Earlier 2.0 releases stopped with "This agent has no thread ID: bind one with setThreadId() first." The agents of the course are classes resolved from the container and work with every 2.0 release.
 
-A fix is proposed to the package. If your installed version still shows the error and you want to use the facade, install the package from the instructor's fork, which contains the fix:
-
-```bash
-composer config repositories.neuron-laravel vcs https://github.com/hidran/neuron-laravel
-composer require "neuron-core/neuron-laravel:dev-fix/facade-thread-id as 2.0.2"
-```
-
-When an official release includes the fix, go back to it with `composer config --unset repositories.neuron-laravel` and `composer require "neuron-core/neuron-laravel:^2.0"`.
+The lesson branches lock the release each lesson was recorded with. To use the facade in a branch, move it to the newest release with `composer require "neuron-core/neuron-laravel:^2.0"`. If you installed the instructor's fork earlier, run `composer config --unset repositories.neuron-laravel` first.
