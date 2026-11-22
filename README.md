@@ -1,8 +1,8 @@
-# Building an invoice extractor, part 2
+# Connect a local tool server with MCP
 
-Source code of the lesson "Building an invoice extractor, part 2" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Connect a local tool server with MCP" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Building an invoice extractor": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Building an invoice extractor, part 2": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,8 +17,20 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `exercises/08-04b-invoice-extractor.md`
+- `examples/46-local-mcp.php`
+- `examples/exercise-local-mcp.php`
+- `examples/verify-local-mcp.php`
+- `servers/office-hours.php`
+- `src/Agents/OfficeHoursAgent.php`
+- `src/Mcp/McpConnection.php`
 
-## Exercise
+## Run
 
-See `exercises/08-04b-invoice-extractor.md`.
+- `php examples/46-local-mcp.php`
+- `php examples/exercise-local-mcp.php`
+
+## Offline check
+
+No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
+
+- `php examples/verify-local-mcp.php`
