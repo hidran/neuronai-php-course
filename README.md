@@ -1,8 +1,8 @@
-# Structured output vs tool calling
+# Lab: extracting orders from emails
 
-Source code of the lesson "Structured output vs tool calling" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Lab: extracting orders from emails" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Validation and retry": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Structured output vs tool calling": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,16 +17,27 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/37-output-vs-tools.php`
-- `examples/exercise-output-vs-tools.php`
-- `exercises/06-06-structured-output-vs-tools.md`
-- `src/Output/PackageReport.php`
+- `examples/38-order-extraction.php`
+- `examples/exercise-order-extraction.php`
+- `examples/verify-order.php`
+- `fixtures/orders/catalog.json`
+- `fixtures/orders/complete.txt`
+- `fixtures/orders/incomplete.txt`
+- `fixtures/orders/malformed.txt`
+- `fixtures/orders/wrong-total.txt`
+- `src/Agents/OrderExtractor.php`
+- `src/Orders/Catalog.php`
+- `src/Orders/OrderReview.php`
+- `src/Output/Order.php`
+- `src/Output/OrderLine.php`
 
 ## Run
 
-- `php examples/37-output-vs-tools.php`
-- `php examples/exercise-output-vs-tools.php`
+- `php examples/38-order-extraction.php`
+- `php examples/exercise-order-extraction.php`
 
-## Exercise
+## Offline check
 
-See `exercises/06-06-structured-output-vs-tools.md`.
+No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
+
+- `php examples/verify-order.php`
