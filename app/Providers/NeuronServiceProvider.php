@@ -1,0 +1,34 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Providers;
+
+use App\Models\ChatMessage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\ServiceProvider;
+use NeuronAI\Chat\History\EloquentMessageStore;
+use NeuronAI\Chat\History\MessageStoreInterface;
+use NeuronAI\Workflow\Persistence\DatabasePersistence;
+use NeuronAI\Workflow\Persistence\PersistenceInterface;
+
+final class NeuronServiceProvider extends ServiceProvider
+{
+    /**
+     * Register services.
+     */
+    #[\Override]
+    public function register(): void
+    {
+        $this->app->singleton(MessageStoreInterface::class, fn () => new EloquentMessageStore(ChatMessage::class));
+        $this->app->bind(PersistenceInterface::class, fn () => new DatabasePersistence(DB::getPdo()));
+    }
+
+    /**
+     * Bootstrap services.
+     */
+    public function boot(): void
+    {
+        //
+    }
+}
