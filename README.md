@@ -1,8 +1,8 @@
-# Max runs: guarding the loop
+# Visibility: conditional tool availability
 
-Source code of the lesson "Max runs: guarding the loop" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Visibility: conditional tool availability" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Toolkit filters, add() and Firecrawl": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Max runs: guarding the loop": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,8 +17,15 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/26-max-runs.php`
+- `examples/27-tool-visibility.php`
+- `examples/verify-visibility.php`
 
 ## Run
 
-- `php examples/26-max-runs.php`
+- `php examples/27-tool-visibility.php`
+
+## Offline check
+
+No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
+
+- `php examples/verify-visibility.php`
