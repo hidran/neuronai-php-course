@@ -1,8 +1,8 @@
-# Validation and retry
+# Structured output vs tool calling
 
-Source code of the lesson "Validation and retry" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Structured output vs tool calling" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Nested objects and typed arrays": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Validation and retry": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,24 +17,16 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/36-validation-retry.php`
-- `examples/exercise-validation-retry.php`
-- `examples/verify-coupon.php`
-- `exercises/06-05-validation-retry.md`
-- `src/Agents/CouponExtractor.php`
-- `src/Output/Coupon.php`
+- `examples/37-output-vs-tools.php`
+- `examples/exercise-output-vs-tools.php`
+- `exercises/06-06-structured-output-vs-tools.md`
+- `src/Output/PackageReport.php`
 
 ## Run
 
-- `php examples/36-validation-retry.php`
-- `php examples/exercise-validation-retry.php`
-
-## Offline check
-
-No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
-
-- `php examples/verify-coupon.php`
+- `php examples/37-output-vs-tools.php`
+- `php examples/exercise-output-vs-tools.php`
 
 ## Exercise
 
-See `exercises/06-05-validation-retry.md`.
+See `exercises/06-06-structured-output-vs-tools.md`.
