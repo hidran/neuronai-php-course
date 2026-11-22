@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-$lab = $argv[1] ?? dirname(__DIR__);
 // Check of the exercise "a limit on messages from the page".
 // Usage: php exercise-message-limit-check.php <your project>
 // It runs the project's OWN providers, routes and views (nothing of the
