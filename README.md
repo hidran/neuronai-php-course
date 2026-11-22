@@ -1,8 +1,8 @@
-# Toolkits
+# Toolkit filters, add() and Firecrawl
 
-Source code of the lesson "Toolkits" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Toolkit filters, add() and Firecrawl" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Structured tool input with #[SchemaProperty]": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Toolkits": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,10 +17,9 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `docker/php/Dockerfile`
-- `examples/24-toolkits.php`
-- `src/Tools/ProjectToolkit.php`
+- `examples/25-toolkit-filters.php`
+- `examples/zz-check-25.php`
 
 ## Run
 
-- `php examples/24-toolkits.php`
+- `php examples/25-toolkit-filters.php`
