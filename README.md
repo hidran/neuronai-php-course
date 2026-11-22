@@ -1,8 +1,8 @@
-# See the endpoint's traces in Inspector: one request, one timeline
+# The Neuron facade, and what to use instead
 
-Source code of the lesson "See the endpoint's traces in Inspector: one request, one timeline" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "The Neuron facade, and what to use instead" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Lab: five minutes to the first response (POST /api/ask)": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "See the endpoint's traces in Inspector: one request, one timeline": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -19,12 +19,13 @@ Put your own provider key in `.env` (never commit it). The tests run without any
 
 ## What this lesson changes
 
-- `.env.example`
-- `app/Providers/AppServiceProvider.php`
-- `bootstrap/app.php`
-- `composer.json`
-- `exercises/13-04b-endpoint-traces-in-inspector.md`
+- `app/Console/Commands/Diagnose.php`
+- `app/Neuron/Middleware/AuditMiddleware.php`
+- `app/Neuron/Output/SupportHours.php`
+- `app/Neuron/Tools/OfficeHours.php`
+- `exercises/13-05-neuron-facade-alternative.md`
+- `app/Neuron/Agents/Tools/OfficeHours.php` (removed)
 
 ## Exercise
 
-See `exercises/13-04b-endpoint-traces-in-inspector.md`.
+See `exercises/13-05-neuron-facade-alternative.md`.
