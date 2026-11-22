@@ -1,0 +1,17 @@
+NeuronAI Studio: a community Laravel package
+Checked: github.com/digitalelvis/neuronai-studio, main at c35b36a
+Revision date: 2026-10-19
+Feature description (project README):
+  Create agents and design workflow graphs visually
+  Run them at runtime for prototyping, with traces
+  Export Neuron Agent, Workflow and Tool PHP classes
+Package metadata (composer.json, "require"):
+  "php": "^8.2"
+  "illuminate/support": "^11.0|^12.0|^13.0"
+  "livewire/livewire": "^3.5|^4.0"
+  "neuron-core/neuron-ai": "^3.17"
+Our application: "neuron-core/neuron-ai": "^4.1"
+Decision:
+  Not a drop-in addition to our application
+  Prototype in an isolated Laravel app on its supported stack
+  Review exported classes like any other generated code

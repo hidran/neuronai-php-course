@@ -1,8 +1,8 @@
-# Version strategy: recognizing v3 code, upgrading to 4.x, following minor releases
+# The ecosystem: Inspector, Maestro live, Neuron Hub, Studio and Symfony
 
-Source code of the lesson "Version strategy: recognizing v3 code, upgrading to 4.x, following minor releases" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "The ecosystem: Inspector, Maestro live, Neuron Hub, Studio and Symfony" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Choosing knowledge mechanisms, part 2": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Version strategy: recognizing v3 code, upgrading to 4.x, following minor releases": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,30 +17,14 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/exercise-upgrade.php`
-- `examples/verify-upgrade.php`
-- `exercises/15-01-version-strategy.md`
-- `fixtures/legacy/old-callers.php`
-- `fixtures/legacy/old-resume.php`
-- `fixtures/legacy/old-tool.php`
-- `fixtures/legacy/prerelease-agent.php`
-- `src/Upgrade/ApprovalResume.php`
-- `src/Upgrade/AssistantCalls.php`
-- `src/Upgrade/NotesAgent.php`
-- `src/Upgrade/StreamedAnswer.php`
-- `src/Upgrade/WordCountTool.php`
-- `tests/UpgradeContractTest.php`
+- `docs/ecosystem/neuronai-studio.txt`
+- `examples/exercise-compatibility.php`
+- `exercises/15-02-ecosystem-maestro.md`
 
 ## Run
 
-- `php examples/exercise-upgrade.php`
-
-## Offline check
-
-No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
-
-- `php examples/verify-upgrade.php`
+- `php examples/exercise-compatibility.php`
 
 ## Exercise
 
-See `exercises/15-01-version-strategy.md`.
+See `exercises/15-02-ecosystem-maestro.md`.
