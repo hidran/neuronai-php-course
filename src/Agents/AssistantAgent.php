@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Agents;
 
+use Composer\InstalledVersions;
+use DateTimeImmutable;
+use DateTimeZone;
 use NeuronAI\Agent\Agent;
 use NeuronAI\Agent\SystemPrompt;
+use NeuronAI\Chat\Messages\ContentBlocks\TextContent;
 use NeuronAI\Chat\Messages\SystemMessage;
 use NeuronAI\Providers\AIProviderInterface;
 
@@ -37,5 +41,18 @@ final class AssistantAgent extends Agent
                 'The example is one line of PHP.',
             ],
         ));
+    }
+
+    #[\Override]
+    protected function context(): array
+    {
+        $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+        $version = InstalledVersions::getPrettyVersion(
+            'neuron-core/neuron-ai',
+        );
+        return [
+            new TextContent('Now: ' . $now->format('Y-m-d H:i T')),
+            new TextContent("Installed NeuronAI: {$version}"),
+        ];
     }
 }
