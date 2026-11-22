@@ -5,6 +5,7 @@
     "license": "MIT",
     "require": {
         "php": ">=8.5",
+        "inspector-apm/inspector-php": "^3.19",
         "neuron-core/neuron-ai": "^4.1",
         "vlucas/phpdotenv": "^5.6"
     },
