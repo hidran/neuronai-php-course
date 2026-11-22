@@ -1,8 +1,8 @@
-# Streaming with tools, part 2
+# Images and documents as content blocks
 
-Source code of the lesson "Streaming with tools, part 2" of Agentic AI in PHP with NeuronAI.
+Source code of the lesson "Images and documents as content blocks" of Agentic AI in PHP with NeuronAI.
 
-This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Streaming with tools": compare it with the parent commit to see the lesson's work.
+This branch is the course project at the end of the lesson. It contains everything the earlier lessons built, and its last commit adds only what this lesson changes after "Streaming with tools, part 2": compare it with the parent commit to see the lesson's work.
 
 ## Setup
 
@@ -17,19 +17,21 @@ Put your own provider keys in `.env` and choose the provider with `NEURON_PROVID
 
 ## What this lesson changes
 
-- `examples/41-streaming-tools.php`
-- `exercises/07-03b-streaming-tools.md`
+- `examples/42-media-content.php`
+- `examples/exercise-media-content.php`
+- `exercises/08-01-media-content-blocks.md`
+- `fixtures/media/expected.json`
+- `fixtures/media/note.pdf`
+- `fixtures/media/note.txt`
+- `fixtures/media/shapes.png`
+- `src/Agents/MediaAgent.php`
+- `src/MediaFixtures.php`
 
 ## Run
 
-- `php examples/41-streaming-tools.php`
-
-## Offline check
-
-No key needed: the check uses NeuronAI's fake provider and prints a final OK line.
-
-- `php examples/verify-streaming-tools.php`
+- `php examples/42-media-content.php`
+- `php examples/exercise-media-content.php`
 
 ## Exercise
 
-See `exercises/07-03b-streaming-tools.md`.
+See `exercises/08-01-media-content-blocks.md`.

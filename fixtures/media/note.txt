@@ -1,0 +1,7 @@
+Fictional packing note
+Project: Cedar Relay
+Dispatch code: PINE-842
+Crates: 17
+Dock: West-4
+Review word: saffron
+Teaching fixture only. No real shipment or customer.
