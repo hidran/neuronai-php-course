@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a75f582da96e9d0eff5a7594d0508066",
+    "content-hash": "45791153a29c6f4aec8f3f4ceb68cd45",
     "packages": [
         {
             "name": "brick/math",
@@ -2702,16 +2702,16 @@
         },
         {
             "name": "neuron-core/neuron-laravel",
-            "version": "2.0.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neuron-core/neuron-laravel.git",
-                "reference": "f18962e6a1287f1dcb747c809459e85d20ec621c"
+                "reference": "3760c6a74b8d84942c4b55ef111c9fb2b2afd721"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neuron-core/neuron-laravel/zipball/f18962e6a1287f1dcb747c809459e85d20ec621c",
-                "reference": "f18962e6a1287f1dcb747c809459e85d20ec621c",
+                "url": "https://api.github.com/repos/neuron-core/neuron-laravel/zipball/3760c6a74b8d84942c4b55ef111c9fb2b2afd721",
+                "reference": "3760c6a74b8d84942c4b55ef111c9fb2b2afd721",
                 "shasum": ""
             },
             "require": {
@@ -2770,9 +2770,9 @@
             ],
             "support": {
                 "issues": "https://github.com/neuron-core/neuron-laravel/issues",
-                "source": "https://github.com/neuron-core/neuron-laravel/tree/2.0.1"
+                "source": "https://github.com/neuron-core/neuron-laravel/tree/2.0.0"
             },
-            "time": "2026-10-30T14:06:37+00:00"
+            "time": "2026-09-30T10:46:52+00:00"
         },
         {
             "name": "nikic/php-parser",

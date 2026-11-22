@@ -1,0 +1,11 @@
+Request: a SupportAgent skeleton and a test of its thread binding.
+Target: neuron-core/neuron-ai 4.1 with neuron-core/neuron-laravel 2.0.
+First read the local neuron-laravel-integration skill.
+Check every method signature in vendor/ before you use it.
+Write app/Neuron/Agents/SupportAgent.php and its unit test,
+tests/Unit/SupportAgentTest.php, with FakeAIProvider: no model call.
+Application decisions:
+- PHP 8.5 or later.
+- Tools are named classes in app/Neuron/Tools.
+- The server chooses the thread: bind it with for(), keep the copy.
+- Never create, read or change .env or any other credential file.
